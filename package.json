@@ -4,7 +4,8 @@
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "watch": "sass --watch index.scss:index.css &"
   },
   "repository": {
     "type": "git",
