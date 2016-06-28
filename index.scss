@@ -31,7 +31,8 @@ main {
   .item {
     display: flex;
     flex: 1;
-    width: 20vw;
+    min-width: 20vw;
+    max-width: 20vw;
     height: 20vw;
     align-items: center;
     justify-content: center;
