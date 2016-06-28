@@ -71,22 +71,8 @@
 
       setTimeout(() => {
         window.UNICODE_DATA = data;
-        let _cursor = 5;
-        let lazy = function ($page) {
-          var $row = $('<div class="row">');
-          for (var i = 0; i < 5; i++) {
-            let char = UNICODE_DATA[_cursor + i],
-            $el = $(tmpl);
-            $el.children('.char').text(char.char);
-            $el.children('.code').text(char.prettyCode);
-            $el.attr('title', char.name.toLowerCase());
-            $row.append($el);
-          }
-          $page.appendChild($row[0]);
-          _cursor += 5;
-        };
         var $main = $('main'),
-            $list = new infinity.ListView($main, {lazy}),
+            $list = new infinity.ListView($main),
             $row,
             tmpl = `<span class="item">
             <span class="char"></span>
@@ -94,7 +80,7 @@
             </span>`.replace(/>\s+</, '><'),
             $bar = $('.loader .progress');
             window.$list = $list;
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < UNICODE_DATA.length; i++) {
           if (i % 5 === 0) {
             if ($row) $list.append($row);
             $row = $('<div class="row">');
