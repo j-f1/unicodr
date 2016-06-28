@@ -15,6 +15,12 @@
     </header>
   </body>
 
+  <div class="loader">
+    <div class="spinner"></div>
+    <p>Loading&hellip;</p>
+    <div class="progress"></div>
+  </div>
+
   <main></main>
 
   <script>
@@ -46,6 +52,7 @@
     var loadUnicodeData = new Promise(function(resolve, reject) {
       let UNICODE_DATA = [];
       fs.readFile(path.join(__dirname, 'load.py'), 'utf-8').then(pythonCode => {
+        $('.loader p').html('Building&hellip;');
         python(pythonCode).then(json => {
           json = json.replace(/^Command Start\n/, '');
           var data = JSON.parse(json);
@@ -60,24 +67,40 @@
       });
     });
     loadUnicodeData.then(data => {
-      window.UNICODE_DATA = data;
-      var $list = new infinity.ListView($('main')),
-          $row,
-          tmpl = `<span class="item">
+      $('.loader p').html('Creating&hellip;');
+
+      setTimeout(() => {
+        window.UNICODE_DATA = data;
+        var $main = $('main'),
+            $list = new infinity.ListView($main),
+            $row,
+            tmpl = `<span class="item">
             <span class="char"></span>
             <span class="code"></span>
-          </span>`.replace(/>\s+</, '><');
-      for (var i = 0; i < UNICODE_DATA.length; i++) {
-        if (i % 5 === 0) {
-          if ($row) $list.append($row);
-          $row = $('<div class="row">');
+            </span>`.replace(/>\s+</, '><'),
+            $bar = $('.loader .progress');
+            window.$list = $list;
+       $main.remove();
+        var max = UNICODE_DATA.length / 100;
+        for (var i = 0; i < max; i++) {
+          if (i % 5 === 0) {
+            if ($row) $list.append($row);
+            $row = $('<div class="row">');
+          }
+          if (i % 100 === 0) {
+            $bar.css('width', i/max + '%');
+          }
+          let char = UNICODE_DATA[i],
+          $el = $(tmpl);
+          $el.children('.char').text(char.char);
+          $el.children('.code').text(char.prettyCode);
+          $el.attr('title', char.name);
+          $row.append($el);
         }
-        let char = UNICODE_DATA[i],
-            $el = $(tmpl);
-        $el.children('.char').text(char.char);
-        $el.children('.code').text(char.prettyCode);
-        $row.append($el);
-      }
+        $('.loader p').html('Displaying&hellip;');
+        $('body').append($main);
+        $('.loader').remove();
+      }, 50);
     }, err => {throw err;});
   </script>
 </html>
