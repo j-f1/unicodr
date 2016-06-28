@@ -15,6 +15,57 @@
 
   <script>
     // You can also require other files to run in this process
-    require('./renderer.js')
+    // This file is required by the index.html file and will
+    // be executed in the renderer process for that window.
+    // All of the Node.js APIs are available in this process.
+
+    const promisify = require('promisify-node');
+    const python = promisify(require('python').shell);
+    const path = require('path');
+    const fs = promisify(require('fs'));
+
+    class UniChar {
+      constructor({name, code}) {
+        this.name = name;
+        this.code = code;
+        this.char = String.fromCharCode(code);
+      }
+      get prettyCode() {
+        var code = this.code.toString(16);
+        while (code.length < 4) {
+          code = "0"+code;
+        }
+        return "U+" + code;
+      }
+    }
+
+    var loadUnicodeData = new Promise(function(resolve, reject) {
+      let UNICODE_DATA = [];
+      fs.readFile(path.join(__dirname, 'load.py'), 'utf-8').then(pythonCode => {
+        python(pythonCode).then(json => {
+          json = json.replace(/^Command Start\n/, '');
+          var data = JSON.parse(json);
+          data.forEach(charInfo => {
+            let char = new UniChar(charInfo);
+            UNICODE_DATA.push(char);
+          });
+          resolve(UNICODE_DATA);
+        });
+      }, err => {
+        reject(err);
+      });
+    });
+    loadUnicodeData.then(data => {
+      window.UNICODE_DATA = data;
+      var main = document.getElementById('main');
+      UNICODE_DATA.slice(0, 1000).forEach(char => {
+        var s = document.createElement('span');
+        s.className = "item";
+        s.innerHTML = '<span class="char"></span><span class="code"></span>';
+        s.querySelector('.char').textContent = char.char;
+        s.querySelector('.code').textContent = char.prettyCode;
+        main.appendChild(s);
+      });
+    }, err => {throw err;});
   </script>
 </html>
