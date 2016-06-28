@@ -71,8 +71,22 @@
 
       setTimeout(() => {
         window.UNICODE_DATA = data;
+        let _cursor = 5;
+        let lazy = function ($page) {
+          var $row = $('<div class="row">');
+          for (var i = 0; i < 5; i++) {
+            let char = UNICODE_DATA[_cursor + i],
+            $el = $(tmpl);
+            $el.children('.char').text(char.char);
+            $el.children('.code').text(char.prettyCode);
+            $el.attr('title', char.name.toLowerCase());
+            $row.append($el);
+          }
+          $page.appendChild($row[0]);
+          _cursor += 5;
+        };
         var $main = $('main'),
-            $list = new infinity.ListView($main),
+            $list = new infinity.ListView($main, {lazy}),
             $row,
             tmpl = `<span class="item">
             <span class="char"></span>
@@ -80,25 +94,22 @@
             </span>`.replace(/>\s+</, '><'),
             $bar = $('.loader .progress');
             window.$list = $list;
-       $main.remove();
-        var max = UNICODE_DATA.length / 100;
-        for (var i = 0; i < max; i++) {
+        for (var i = 0; i < 5; i++) {
           if (i % 5 === 0) {
             if ($row) $list.append($row);
             $row = $('<div class="row">');
           }
-          if (i % 100 === 0) {
-            $bar.css('width', i/max + '%');
-          }
+          // if (i % 100 === 0) {
+          //   $bar.css('width', i/max + 'vw');
+          // }
           let char = UNICODE_DATA[i],
           $el = $(tmpl);
           $el.children('.char').text(char.char);
           $el.children('.code').text(char.prettyCode);
-          $el.attr('title', char.name);
+          $el.attr('title', char.name.toLowerCase());
           $row.append($el);
         }
         $('.loader p').html('Displaying&hellip;');
-        $('body').append($main);
         $('.loader').remove();
       }, 50);
     }, err => {throw err;});
