@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <title>Hello World!</title>
     <link rel="stylesheet" href="index.css" charset="utf-8">
-    <script src="jquery.slim.min.js" charset="utf-8"></script>
+    <script>
+      window.$ = window.jQuery = require('jquery');
+    </script>
+    <script src="infinity.js" charset="utf-8"></script>
   </head>
   <body>
     <header>
@@ -58,16 +61,24 @@
     });
     loadUnicodeData.then(data => {
       window.UNICODE_DATA = data;
-      var $main = $('main');
-      UNICODE_DATA.forEach(char => {
-        var $el = $(`<span class="item">
-          <span class="char"></span>
-          <span class="code"></span>
-        </span>`);
+      var $main = $('main'),
+          list = new infinity.ListView($main),
+          $row,
+          tmpl = `<span class="item">
+            <span class="char"></span>
+            <span class="code"></span>
+          </span>`.replace(/>\s+</, '><');
+      for (var i = 0; i < UNICODE_DATA.length; i++) {
+        if (i % 5 === 0) {
+          if ($row) $list.append($row);
+          $row = $('<div>');
+        }
+        let char = UNICODE_DATA[i],
+            $el = $(tmpl);
         $el.children('.char').text(char.char);
         $el.children('.code').text(char.prettyCode);
-        $main.append($el);
-      });
+        $row.append($el);
+      }
     }, err => {throw err;});
   </script>
 </html>
