@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Hello World!</title>
     <link rel="stylesheet" href="index.css" charset="utf-8">
+    <script src="jquery.slim.min.js" charset="utf-8"></script>
   </head>
   <body>
     <header>
@@ -11,7 +12,7 @@
     </header>
   </body>
 
-  <main id="main"></main>
+  <main></main>
 
   <script>
     // You can also require other files to run in this process
@@ -33,7 +34,7 @@
       get prettyCode() {
         var code = this.code.toString(16);
         while (code.length < 4) {
-          code = "0"+code;
+          code = "0" + code;
         }
         return "U+" + code;
       }
@@ -57,14 +58,15 @@
     });
     loadUnicodeData.then(data => {
       window.UNICODE_DATA = data;
-      var main = document.getElementById('main');
-      UNICODE_DATA.slice(0, 1000).forEach(char => {
-        var s = document.createElement('span');
-        s.className = "item";
-        s.innerHTML = '<span class="char"></span><span class="code"></span>';
-        s.querySelector('.char').textContent = char.char;
-        s.querySelector('.code').textContent = char.prettyCode;
-        main.appendChild(s);
+      var $main = $('main');
+      UNICODE_DATA.forEach(char => {
+        var $el = $(`<span class="item">
+          <span class="char"></span>
+          <span class="code"></span>
+        </span>`);
+        $el.children('.char').text(char.char);
+        $el.children('.code').text(char.prettyCode);
+        $main.append($el);
       });
     }, err => {throw err;});
   </script>
