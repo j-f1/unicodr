@@ -61,8 +61,7 @@
     });
     loadUnicodeData.then(data => {
       window.UNICODE_DATA = data;
-      var $main = $('main'),
-          list = new infinity.ListView($main),
+      var $list = new infinity.ListView($('main')),
           $row,
           tmpl = `<span class="item">
             <span class="char"></span>
@@ -71,7 +70,7 @@
       for (var i = 0; i < UNICODE_DATA.length; i++) {
         if (i % 5 === 0) {
           if ($row) $list.append($row);
-          $row = $('<div>');
+          $row = $('<div class="row">');
         }
         let char = UNICODE_DATA[i],
             $el = $(tmpl);

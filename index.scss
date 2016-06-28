@@ -8,6 +8,9 @@ header {
   border-bottom: 1px solid #CCC;
   box-shadow: 0 -20px 5px 20px #CCC; // spread & move up to avoid fade in corners.
   padding: 0 1em;
+  background: transparentize(white, 0.1);
+  position: fixed;
+  width: 100vw;
 
   .search {
     width: 100%;
@@ -26,36 +29,35 @@ header {
 }
 
 main {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  min-height: calc(100vh - #{$header-height});
-  max-height: calc(100vh - #{$header-height});
   position: absolute;
   top: $header-height;
   z-index: -1;
   overflow: auto;
 
-  .item {
+  .row {
     display: flex;
-    flex: 1;
-    min-width: 20vw;
-    max-width: 20vw;
-    height: 20vw;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    .char {
-      min-height: 8vw;
-      font-size:  8vw;
-      font-family: sans-serif;
-    }
-    .code {
-      margin-top: 1vw;
-      font-size: 1vw;
-      font-family: monospace;
-      pointer-events: none;
-      -webkit-user-select: none;
+    width: 100vw;
+    .item {
+      display: flex;
+      flex: 1;
+      min-width: 20vw;
+      max-width: 20vw;
+      height: 20vw;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      .char {
+        min-height: 8vw;
+        font-size:  8vw;
+        font-family: sans-serif;
+      }
+      .code {
+        margin-top: 1vw;
+        font-size: 1vw;
+        font-family: monospace;
+        pointer-events: none;
+        -webkit-user-select: none;
+      }
     }
   }
 }
