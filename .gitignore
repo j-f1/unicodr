@@ -1,2 +1,5 @@
 node_modules
 .DS_Store
+index.css
+index.css.map
+.sass-cache
