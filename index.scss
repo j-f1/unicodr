@@ -34,6 +34,17 @@ body {
   }
 }
 
+html:not(.fullscreen) header {
+  padding-left: calc(1em + 60px);
+}
+html.fullscreen {
+  .grabber {
+    display: none;
+  }
+  .search {
+    width: 100%;
+  }
+}
 header {
   height: $header-height;
   border-bottom: 1px solid #CCC;
@@ -41,7 +52,7 @@ header {
   background: transparentize(#f0f0f0, 0.1);
   position: fixed;
   width: 100vw;
-  padding-left: calc(1em + 60px);
+  padding-left: 1em;
   box-sizing: border-box;
 
   .grabber {
