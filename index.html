@@ -7,7 +7,10 @@
     <script>
       window.$ = window.jQuery = require('jquery');
     </script>
-    <script src="infinity.js" charset="utf-8"></script>
+    <script src="iscroll-infinite.js" charset="utf-8"></script>
+    <script>
+      window.IScroll = module.exports;
+    </script>
   </head>
   <body>
     <header>
@@ -22,8 +25,34 @@
     <div class="progress"></div>
   </div>
 
-  <main></main>
-
+  <div id="wrapper">
+    <main>
+      <ul>
+        <li class="row">
+          <span class="item">
+            <span class="char"></span>
+            <span class="code"></span>
+          </span>
+          <span class="item">
+            <span class="char"></span>
+            <span class="code"></span>
+          </span>
+          <span class="item">
+            <span class="char"></span>
+            <span class="code"></span>
+          </span>
+          <span class="item">
+            <span class="char"></span>
+            <span class="code"></span>
+          </span>
+          <span class="item">
+            <span class="char"></span>
+            <span class="code"></span>
+          </span>
+        </li>
+      </ul>
+  </main>
+  </div>
   <script>
     // You can also require other files to run in this process
     // This file is required by the index.html file and will
@@ -48,6 +77,28 @@
         }
         return "U+" + code;
       }
+      get HTML() {
+        $el = $(this.constructor.tmpl);
+        return this.fill$View($el);
+      }
+      fill$View($view) {
+        $view.each(function(i, el) {
+          this.fillView(el);
+        });
+      }
+      fillView(view) {
+        view.querySelector('.char').textContent = this.char;
+        view.querySelector('.code').textContent = this.prettyCode;
+        view.title = this.name.toLowerCase();
+        return view;
+      }
+    }
+
+    {
+      let ch = $('ul').children();
+      for (var i = 0; i < 100; i++) {
+        ch.clone().appendTo($('ul'));
+      }
     }
 
     var loadUnicodeData = new Promise(function(resolve, reject) {
@@ -68,36 +119,31 @@
       });
     });
     loadUnicodeData.then(data => {
-      $('.loader p').html('Creating&hellip;');
-
-      setTimeout(() => {
-        window.UNICODE_DATA = data;
-        var $main = $('main'),
-            $list = new infinity.ListView($main),
-            $row,
-            tmpl = `<span class="item">
-            <span class="char"></span>
-            <span class="code"></span>
-            </span>`.replace(/>\s+</, '><'),
-            $bar = $('.loader .progress');
-            window.$list = $list;
-        for (var i = 0; i < UNICODE_DATA.length; i++) {
-          if (i % 5 === 0) {
-            if ($row) $list.append($row);
-            $row = $('<div class="row">');
-          }
-          // if (i % 100 === 0) {
-          //   $bar.css('width', i/max + 'vw');
-          // }
-          let char = UNICODE_DATA[i],
-          $el = $(tmpl);
-          $el.children('.char').text(char.char);
-          $el.children('.code').text(char.prettyCode);
-          $el.attr('title', char.name.toLowerCase());
-          $row.append($el);
+      window.UNICODE_DATA = data;
+      var rows = [];
+      for (var i = 0; i < UNICODE_DATA.length; i++) {
+        if (i % 5 === 0) {
+          rows.push([]);
         }
-        $('.loader').remove();
-      }, 50);
+        rows[rows.length-1].push(UNICODE_DATA[i]);
+      }
+      $('.loader p').html('Creating&hellip;');
+      var scroller = new IScroll("#wrapper", {
+        mouseWheel: true,
+        scrollbars: true,
+        infiniteElements: 'main .row',
+        dataset: (start, count) => {
+          setTimeout(() => {
+            scroller.updateCache(start, rows.slice(start, count));
+          });
+        },
+        dataFiller: (el, data) => {
+          $(el).children().each((i, el) => {
+            data[i].fillView(el);
+          });
+        }
+      });
+      $('.loader').remove();
     }, err => {throw err;});
   </script>
 </html>

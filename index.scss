@@ -94,35 +94,36 @@ header {
   }
 }
 
-main {
+#wrapper {
   position: absolute;
-  top: $header-height;
+  padding-top: $header-height;
   z-index: -1;
-  overflow: auto;
-
-  .row {
-    display: flex;
-    width: 100vw;
-    .item {
+  main {
+    .row {
       display: flex;
-      flex: 1;
-      min-width: 20vw;
-      max-width: 20vw;
-      height: 20vw;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      .char {
-        min-height: 8vw;
-        font-size:  8vw;
-        font-family: sans-serif;
-      }
-      .code {
-        margin-top: 1vw;
-        font-size: 1vw;
-        font-family: monospace;
-        pointer-events: none;
-        -webkit-user-select: none;
+      height: 20vw; // hack. WHY????
+      width: 100vw;
+      .item {
+        display: flex;
+        flex: 1;
+        min-width: 20vw;
+        max-width: 20vw;
+        height: 20vw;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        .char {
+          min-height: 8vw;
+          font-size:  8vw;
+          font-family: sans-serif;
+        }
+        .code {
+          margin-top: 1vw;
+          font-size: 1vw;
+          font-family: monospace;
+          pointer-events: none;
+          -webkit-user-select: none;
+        }
       }
     }
   }
