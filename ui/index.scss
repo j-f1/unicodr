@@ -73,15 +73,18 @@ header {
   }
 }
 
-body.ready #wrapper main .row {
+body.ready .wrapper .scroller .row {
   height: 0;
 }
 
-#wrapper {
+main {
   position: absolute;
   top: $header-height;
+}
+
+.wrapper {
   z-index: -1;
-  main {
+  .scroller {
     position: absolute;
     ul {
       padding: 0;
