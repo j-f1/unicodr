@@ -12,6 +12,7 @@
   <body>
     <header>
       <input class="search" placeholder="Search characters…">
+      <div class="grabber"><span class="grab"></span></div>
     </header>
   </body>
 
@@ -95,7 +96,6 @@
           $el.attr('title', char.name.toLowerCase());
           $row.append($el);
         }
-        $('.loader p').html('Displaying&hellip;');
         $('.loader').remove();
       }, 50);
     }, err => {throw err;});

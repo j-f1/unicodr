@@ -1,8 +1,9 @@
-$header-height: 3em;
+$header-height: 2.5em;
 
 body {
   margin: 0;
   font-family: sans-serif;
+  background: white;
 }
 
 .loader {
@@ -37,15 +38,50 @@ header {
   height: $header-height;
   border-bottom: 1px solid #CCC;
   box-shadow: 0 -20px 5px 20px #CCC; // spread & move up to avoid fade in corners.
-  padding: 0 1em;
-  background: transparentize(white, 0.1);
+  background: transparentize(#f0f0f0, 0.1);
   position: fixed;
   width: 100vw;
+  padding-left: calc(1em + 60px);
+  box-sizing: border-box;
+
+  .grabber {
+    display: inline-block;
+    width: 2em;
+    height: 100%;
+    background: repeating-linear-gradient(black 33%, #f0f0f0 33%, #f0f0f0 66%, black 66%);
+    background-size: 100% 33%;
+    float: right;
+    -webkit-app-region: drag;
+
+    cursor: -webkit-grab;
+    cursor: move;
+
+    .grab {
+      right: 0.5em;
+      top: 1.2em;
+      &, &::before, &::after {
+        height: 0.25em;
+        width: 2em;
+        background: #999;
+        position: absolute;
+        display: block;
+        content: '';
+      }
+      &::before {
+        top: -.6em;
+      }
+      &::after {
+        bottom: -.6em;
+      }
+    }
+  }
 
   .search {
-    width: 100%;
+    position: absolute;
+    top: 0;
+    width: calc(100% - 5em);
     height: 100%;
-    font-size: 2em;
+    font-size: 1.5em;
 
     background: transparent;
     border: none;
