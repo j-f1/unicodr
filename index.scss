@@ -38,9 +38,6 @@ html:not(.fullscreen) header {
   padding-left: calc(1em + 60px);
 }
 html.fullscreen {
-  .grabber {
-    display: none;
-  }
   .search {
     width: 100%;
   }
@@ -55,39 +52,10 @@ header {
   padding-left: 1em;
   box-sizing: border-box;
 
-  .grabber {
-    display: inline-block;
-    width: 2em;
-    height: 100%;
-    background: repeating-linear-gradient(black 33%, #f0f0f0 33%, #f0f0f0 66%, black 66%);
-    background-size: 100% 33%;
-    float: right;
-    -webkit-app-region: drag;
-
-    cursor: -webkit-grab;
-    cursor: move;
-
-    .grab {
-      right: 0.5em;
-      top: 1.2em;
-      &, &::before, &::after {
-        height: 0.25em;
-        width: 2em;
-        background: #999;
-        position: absolute;
-        display: block;
-        content: '';
-      }
-      &::before {
-        top: -.6em;
-      }
-      &::after {
-        bottom: -.6em;
-      }
-    }
-  }
+  -webkit-app-region: drag;
 
   .search {
+    -webkit-app-region: no-drag;
     position: absolute;
     top: 0;
     width: calc(100% - 5em);
