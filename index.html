@@ -116,7 +116,7 @@
         rows[rows.length-1].push(UNICODE_DATA[i]);
       }
       $('.loader p').html('Creating&hellip;');
-      var scroller = new IScroll("#wrapper", {
+      window.scroller = new IScroll("#wrapper", {
         mouseWheel: true,
         infiniteElements: 'main .row',
         disableMouse: true,
