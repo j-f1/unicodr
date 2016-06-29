@@ -119,6 +119,8 @@
       var scroller = new IScroll("#wrapper", {
         mouseWheel: true,
         infiniteElements: 'main .row',
+        disableMouse: true,
+        disablePointer: true,
         dataset: (start, count) => {
           setTimeout(() => {
             scroller.updateCache(start, rows.slice(start, count));
