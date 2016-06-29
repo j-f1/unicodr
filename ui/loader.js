@@ -1,11 +1,11 @@
 {
-  let row = $('.row');
+  let row = $('main .row');
   let cell = row.children();
   for (var i = 1; i < 5  ; i++) {
     cell.clone().appendTo(row);
   }
   for (var i = 1; i < 100; i++) {
-    row.clone().appendTo($('ul'));
+    row.clone().appendTo($('main ul'));
   }
 }
 
@@ -36,31 +36,8 @@ var loadUnicodeData = new Promise(function(resolve, reject) {
 
 loadUnicodeData.then(data => {
   window.UNICODE_DATA = data;
-  var rows = [];
-  for (var i = 0; i < UNICODE_DATA.length; i++) {
-    if (i % 5 === 0) {
-      rows.push([]);
-    }
-    rows[rows.length-1].push(UNICODE_DATA[i]);
-  }
   $('.loader p').html('Creating&hellip;');
-  window.scroller = new IScroll("#wrapper", {
-    mouseWheel: true,
-    infiniteElements: 'main .row',
-    disableMouse: true,
-    disablePointer: true,
-    dataset: (start, count) => {
-      setTimeout(() => {
-        scroller.updateCache(start, rows.slice(start, count));
-      });
-    },
-    dataFiller: (el, data) => {
-      $(el).children().each((i, el) => {
-        data[i].fillView(el);
-      });
-    },
-    cacheSize: 10000
-  });
+  window.scroller = createScroller({data, wrapperSelector:'main'});
   setTimeout(() => {
     $('body').addClass('ready');
   }, 100);
