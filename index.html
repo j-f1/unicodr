@@ -26,7 +26,7 @@
   </div>
 
   <div id="wrapper">
-    <main>
+  	<main id="scroller">
       <ul>
         <li class="row">
           <span class="item">
@@ -51,7 +51,7 @@
           </span>
         </li>
       </ul>
-  </main>
+    </main>
   </div>
   <script>
     // You can also require other files to run in this process
@@ -130,7 +130,6 @@
       $('.loader p').html('Creating&hellip;');
       var scroller = new IScroll("#wrapper", {
         mouseWheel: true,
-        scrollbars: true,
         infiniteElements: 'main .row',
         dataset: (start, count) => {
           setTimeout(() => {
@@ -141,8 +140,12 @@
           $(el).children().each((i, el) => {
             data[i].fillView(el);
           });
-        }
+        },
+        cacheSize: 10000
       });
+      setTimeout(() => {
+        $('body').addClass('ready');
+      }, 100);
       $('.loader').remove();
     }, err => {throw err;});
   </script>

@@ -94,11 +94,20 @@ header {
   }
 }
 
+body.ready #wrapper main .row {
+  height: 0;
+}
+
 #wrapper {
   position: absolute;
-  padding-top: $header-height;
+  top: $header-height;
   z-index: -1;
   main {
+    position: absolute;
+    ul {
+      padding: 0;
+      margin: 0;
+    }
     .row {
       display: flex;
       height: 20vw; // hack. WHY????
@@ -113,6 +122,7 @@ header {
         justify-content: center;
         flex-direction: column;
         .char {
+          -webkit-user-select: auto;
           min-height: 8vw;
           font-size:  8vw;
           font-family: sans-serif;
