@@ -18,8 +18,9 @@ class UniChar {
     return "U+" + code;
   }
   get HTML() {
-    $el = $(this.constructor.tmpl);
-    return this.fill$View($el);
+    let el = $(this.constructor.tmpl)[0];
+    this.fillView(el);
+    return el.outerHTML;
   }
   fill$View($view) {
     $view.each(function(i, el) {
@@ -36,5 +37,10 @@ class UniChar {
     return this._lname.indexOf(name) !== -1;
   }
 }
-
+UniChar.tmpl =
+`<span class="item">
+  <span class="char"></span>
+  <span class="code"></span>
+  <span class="note">Click to copy</span>
+</span>`.replace(/>\s+</m, '><');
 module.exports = UniChar;
