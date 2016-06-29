@@ -13,7 +13,7 @@ function createWindow () {
   mainWindow = new BrowserWindow({width: 800, height: 600, titleBarStyle: 'hidden-inset'})
 
   // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/index.html`)
+  mainWindow.loadURL(`file://${__dirname}/ui/index.html`)
 
   mainWindow.on('enter-full-screen', () => {
     mainWindow.webContents.executeJavaScript(`$('html').addClass('fullscreen')`);
