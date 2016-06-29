@@ -121,11 +121,18 @@ body.ready #wrapper main .row {
         align-items: center;
         justify-content: center;
         flex-direction: column;
+        position: relative;
         .char {
-          -webkit-user-select: auto;
+          cursor: pointer;
+          -webkit-user-select: none;
           min-height: 8vw;
           font-size:  8vw;
           font-family: sans-serif;
+          width: 100%;
+          text-align: center;
+          &:hover ~ .note {
+            opacity: 1;
+          }
         }
         .code {
           margin-top: 1vw;
@@ -133,6 +140,21 @@ body.ready #wrapper main .row {
           font-family: monospace;
           pointer-events: none;
           -webkit-user-select: none;
+        }
+        .note {
+          background: transparentize(black, 0.5);
+          color: white;
+          border-radius: 0.75vw;
+          padding: 0.5vw;
+          width: 50%;
+          text-align: center;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 0.2s;
+          order: -1;
+          margin-bottom: -1em - (1/8) - 0.5;
+          z-index: 1;
+          font-size: 1.75vw;
         }
       }
     }
