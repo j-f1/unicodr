@@ -15,8 +15,11 @@ function createWindow () {
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`)
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  mainWindow.on('enter-full-screen', () => {
+    mainWindow.webContents.executeJavaScript(`$('html').addClass('fullscreen')`);
+  }).on('leave-full-screen', () => {
+    mainWindow.webContents.executeJavaScript(`$('html').removeClass('fullscreen')`);
+  });
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {

@@ -143,12 +143,6 @@
     const {clipboard, remote} = require('electron');
     window.currentBrowserWindow = remote.getCurrentWindow();
 
-    currentBrowserWindow.on('enter-full-screen', () => {
-      $('html').addClass('fullscreen');
-    });
-    currentBrowserWindow.on('leave-full-screen', () => {
-      $('html').removeClass('fullscreen');
-    });
 
     $('html').toggleClass('fullscreen', currentBrowserWindow.isFullScreen());
 
