@@ -1,5 +1,6 @@
+var $ = require('jquery');
 const {clipboard, remote} = require('electron');
-window.currentBrowserWindow = remote.getCurrentWindow();
+module.exports = currentBrowserWindow = remote.getCurrentWindow();
 
 // Fullscreen support (the rest is in main.js).
 $('html').toggleClass('fullscreen', currentBrowserWindow.isFullScreen());

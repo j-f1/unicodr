@@ -1,37 +1,13 @@
-{
-  let row = $('main .row');
-  let cell = row.children();
-  for (var i = 1; i < 5  ; i++) {
-    cell.clone().appendTo(row);
-  }
-  for (var i = 1; i < 100; i++) {
-    row.clone().appendTo($('main ul'));
-  }
-}
+var $ = require('jquery');
 
-createScroller = ({data, wrapperSelector}) => {
-  var rows = [];
-  for (var i = 0; i < data.length; i++) {
-    if (i % 5 === 0) {
-      rows.push([]);
-    }
-    rows[rows.length-1].push(data[i]);
-  }
+module.exports = createScroller = ({data, wrapperSelector, rowSelector, loadData, renderData}) => {
   var scroller = new IScroll(wrapperSelector, {
     mouseWheel: true,
-    infiniteElements: wrapperSelector + ' .row',
+    infiniteElements: wrapperSelector + ' ' + rowSelector,
     disableMouse: true,
     disablePointer: true,
-    dataset: (start, count) => {
-      setTimeout(() => {
-        scroller.updateCache(start, rows.slice(start, count));
-      });
-    },
-    dataFiller: (el, data) => {
-      $(el).children().each((i, el) => {
-        data[i].fillView(el);
-      });
-    },
+    dataset: loadData,
+    dataFiller: renderData,
     cacheSize: 10000
   });
   return scroller;

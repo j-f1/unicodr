@@ -1,3 +1,5 @@
+var $ = require('jquery');
+
 {
   let row = $('main .row');
   let cell = row.children();
@@ -14,7 +16,7 @@ window.python = promisify(require('python').shell);
 window.path = require('path');
 window.fs = promisify(require('fs'));
 
-var loadUnicodeData = new Promise(function(resolve, reject) {
+module.exports = loadUnicodeData = new Promise(function(resolve, reject) {
   let UNICODE_DATA = [];
   fs.readFile(path.join(__dirname, 'load.py'), 'utf-8').then(pythonCode => {
     $('.loader p').html('Building&hellip;');
@@ -37,7 +39,22 @@ var loadUnicodeData = new Promise(function(resolve, reject) {
 loadUnicodeData.then(data => {
   window.UNICODE_DATA = data;
   $('.loader p').html('Creating&hellip;');
-  window.scroller = createScroller({data, wrapperSelector:'main'});
+  var rows = [];
+  for (var i = 0; i < data.length; i++) {
+    if (i % 5 === 0) {
+      rows.push([]);
+    }
+    rows[rows.length-1].push(data[i]);
+  }
+  window.scroller = createScroller({data, wrapperSelector:'main', rowSelector: '.row', loadData:(start, count) => {
+    setTimeout(() => {
+      scroller.updateCache(start, rows.slice(start, count));
+    });
+  }, renderData: (el, data) => {
+    $(el).children().each((i, el) => {
+      data[i].fillView(el);
+    });
+  } });
   setTimeout(() => {
     $('body').addClass('ready');
   }, 100);

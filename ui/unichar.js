@@ -1,3 +1,5 @@
+var $ = require('jquery');
+
 class UniChar {
   constructor({name, code}) {
     this.name = name;
@@ -34,3 +36,5 @@ class UniChar {
     return this._lname.indexOf(name) !== -1;
   }
 }
+
+module.exports = UniChar;

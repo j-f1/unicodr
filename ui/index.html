@@ -37,15 +37,14 @@
     </div>
   </main>
 
-  <section class="search-results wrappper">
+  <section class="search-results wrapper">
     <div class="scroller">
       <ul>
-        <li class="row">
-          <span class="item">
-            <span class="char"></span>
-            <span class="code"></span>
-            <span class="note">Click to copy</span>
-          </span>
+        <li class="item">
+          <span class="char"></span>
+          <span class="name"></span>
+          <span class="code"></span>
+          <button class="copy">Copy</button>
         </li>
       </ul>
     </div>
@@ -57,11 +56,11 @@
     // be executed in the renderer process for that window.
     // All of the Node.js APIs are available in this process.
 
-    require('./renderer.js');
-    require('./unichar.js');
-    require('./loader.js');
+    window.UniChar = require('./unichar.js');
+    window.createScroller = require('./renderer.js');
+    window.loadUnicodeData = require('./loader.js');
     require('./search.js');
-    require('./misc.js');
+    window.currentBrowserWindow = require('./misc.js');
 
   </script>
 </html>
