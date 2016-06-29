@@ -51,8 +51,12 @@
     class UniChar {
       constructor({name, code}) {
         this.name = name;
+        this._lname = name.toLowerCase();
         this.code = code;
         this.char = String.fromCharCode(code);
+      }
+      toString() {
+        return `“${this.char}”: ${this.name} (${this.prettyCode})`;
       }
       get prettyCode() {
         var code = this.code.toString(16);
@@ -75,6 +79,9 @@
         view.querySelector('.code').textContent = this.prettyCode;
         view.title = this.name.toLowerCase();
         return view;
+      }
+      matches(name /* must be all lowercase */) {
+        return this._lname.indexOf(name) !== -1;
       }
     }
 
@@ -139,6 +146,11 @@
       $('.loader').remove();
     }, err => {throw err;});
 
+    $('.search').on('change', (e) => {
+      var val = e.target.value.toLowerCase();
+      var filtered = UNICODE_DATA.slice().filter(char => char.matches(val));
+      console.log(filtered.map(item => item.toString()));
+    });
 
     const {clipboard, remote} = require('electron');
     window.currentBrowserWindow = remote.getCurrentWindow();
