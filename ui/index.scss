@@ -85,6 +85,7 @@ main {
 .wrapper {
   z-index: -1;
   .scroller {
+    z-index: -1;
     position: absolute;
     ul {
       padding: 0;
@@ -149,6 +150,7 @@ main .scroller {
   display: flex;
   align-items: center;
   height: 15vh;
+  width: 100vw;
 
   .char {
     font-size: 15vh;

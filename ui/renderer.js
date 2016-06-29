@@ -6,8 +6,16 @@ module.exports = createScroller = ({data, wrapperSelector, rowSelector, loadData
     infiniteElements: wrapperSelector + ' ' + rowSelector,
     disableMouse: true,
     disablePointer: true,
-    dataset: loadData,
-    dataFiller: renderData,
+    dataset: (start, count) => {
+      setTimeout(() => {
+        scroller.updateCache(start, loadData(start, count).filter(x=>!!x));
+      });
+    },
+    dataFiller: (el, char) => {
+      if (el && char) {
+        renderData(el, char);
+      }
+    },
     cacheSize: 10000
   });
   return scroller;

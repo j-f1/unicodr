@@ -46,11 +46,9 @@ loadUnicodeData.then(data => {
     }
     rows[rows.length-1].push(data[i]);
   }
-  window.scroller = createScroller({data, wrapperSelector:'main', rowSelector: '.row', loadData:(start, count) => {
-    setTimeout(() => {
-      scroller.updateCache(start, rows.slice(start, count));
-    });
-  }, renderData: (el, data) => {
+  window.scroller = createScroller({data, wrapperSelector:'main', rowSelector: '.row',
+  loadData:(start, count) => rows.slice(start, count),
+  renderData: (el, data) => {
     $(el).children().each((i, el) => {
       data[i].fillView(el);
     });
