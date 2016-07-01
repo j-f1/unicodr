@@ -28,8 +28,10 @@ class UniChar {
     });
   }
   fillView(view) {
-    view.querySelector('.char').textContent = this.char;
-    view.querySelector('.code').textContent = this.prettyCode;
+    if (!view) return;
+    (view.querySelector('.char') || {}).textContent = this.char;
+    (view.querySelector('.code') || {}).textContent = this.prettyCode;
+    (view.querySelector('.name') || {}).textContent = this.name;
     view.title = this.name.toLowerCase();
     return view;
   }
@@ -42,5 +44,5 @@ UniChar.tmpl =
   <span class="char"></span>
   <span class="code"></span>
   <span class="note">Click to copy</span>
-</span>`.replace(/>\s+</m, '><');
+</span>`;
 module.exports = UniChar;
