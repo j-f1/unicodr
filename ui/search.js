@@ -12,9 +12,9 @@ window.loadUnicodeData.then(() => {
   $('.search-results').hide();
 });
 
-$('.search').on('change', (e) => {
+$('.search').on('change', ({target}) => {
   setTimeout(() => {
-    var val = e.target.value.toLowerCase();
+    var val = target.value.toLowerCase();
     if (val.length) {
       let _filtered = UNICODE_DATA.filter(char => char.matches(val));
 
@@ -34,8 +34,13 @@ $('.search').on('change', (e) => {
       });
     }
   });
-}).on('keyup', (e) => {
-  if (e.keyCode === 27) {
-    $(e.target).val('').trigger('change');
+}).on('keyup', ({keyCode, target}) => {
+  if (keyCode === 27) {
+    $(target).val('').trigger('change');
   }
+});
+
+$('body').on('click', '.search-results .copy', ({target}) => {
+  const {clipboard} = require('electron');
+  clipboard.writeText($(target).parents('.item').find('.char').text());
 });
