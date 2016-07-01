@@ -8,10 +8,6 @@ let tmpl =
   <td><button class="btn copy">Copy</button></td>
 </tr>`;
 
-window.loadUnicodeData.then(() => {
-  $('.search-results').hide();
-});
-
 $('.search').on('change', ({target}) => {
   setTimeout(() => {
     var val = target.value.toLowerCase();
@@ -19,18 +15,19 @@ $('.search').on('change', ({target}) => {
       let _filtered = UNICODE_DATA.filter(char => char.matches(val));
 
       let _els = _filtered.map(char => char.fillView($(tmpl)[0]));
-      var $results = $('.search-results').empty().remove();
+      var $results = $('.search-results').empty();
+      $results.parent().remove();
       _els.forEach(el => {
         $results.append(el);
       });
-      $results.appendTo('body');
+      $results.parent().appendTo('body');
 
       $('main').fadeOut();
-      $('.search-results').fadeIn();
+      $('.search-results-wrap').fadeIn();
     } else {
       $('main').fadeIn();
-      $('.search-results').fadeOut(function () {
-        $(this).empty();
+      $('.search-results-wrap').fadeOut(function () {
+        $('.search-results').empty();
       });
     }
   });

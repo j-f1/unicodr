@@ -5,6 +5,7 @@ body {
   margin-top: $header-height;
   font-family: sans-serif;
   background: white;
+  overflow: hidden;
 }
 
 .loader {
@@ -148,8 +149,12 @@ main .scroller {
   }
 }
 
+.search-results-wrap {
+  height: 100vh;
+  overflow: auto;
+}
 .search-results {
-  width: 50vw;
+  width: 75vw;
   min-width: 500px;
   margin: auto;
   .item {
