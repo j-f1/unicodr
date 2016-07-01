@@ -34,4 +34,8 @@ $('.search').on('change', (e) => {
       });
     }
   });
+}).on('keyup', (e) => {
+  if (e.keyCode === 27) {
+    $(e.target).val('').trigger('change');
+  }
 });
