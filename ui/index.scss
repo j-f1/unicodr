@@ -2,6 +2,7 @@ $header-height: 2.5em;
 
 body {
   margin: 0;
+  margin-top: $header-height;
   font-family: sans-serif;
   background: white;
 }
@@ -48,6 +49,7 @@ header {
   box-shadow: 0 -20px 5px 20px #CCC; // spread & move up to avoid fade in corners.
   background: transparentize(#f0f0f0, 0.1);
   position: fixed;
+  top: 0;
   width: 100vw;
   padding-left: 1em;
   box-sizing: border-box;
@@ -79,7 +81,6 @@ body.ready .wrapper .scroller .row {
 
 main {
   position: absolute;
-  top: $header-height;
 }
 
 .wrapper {
@@ -93,6 +94,7 @@ main {
     }
   }
 }
+
 main .scroller {
   .row {
     display: flex;
@@ -146,24 +148,26 @@ main .scroller {
   }
 }
 
-.search-results .item {
-  display: flex;
-  align-items: center;
-  height: 15vh;
-  width: 100vw;
+.search-results {
+  width: 50vw;
+  min-width: 500px;
+  margin: auto;
+  .item {
+    height: 10vw;
 
-  .char {
-    font-size: 15vh;
-    margin: 0 1em;
-  }
-  .code {
-    font-family: monospace;
-
-    &::before {
-      content: '(';
+    .char {
+      font-size: 10vw*(7/8);
+      text-align: center;
     }
-    &::after {
-      content: ')';
+    .code {
+      font-family: monospace;
+
+      &::before {
+        content: '(';
+      }
+      &::after {
+        content: ')';
+      }
     }
   }
 }
