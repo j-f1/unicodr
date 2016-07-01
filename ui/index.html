@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>Hello World!</title>
+    <link rel="stylesheet" href="min.css" charset="utf-8">
     <link rel="stylesheet" href="index.css" charset="utf-8">
     <script>
       window.$ = window.jQuery = require('jquery');
@@ -37,18 +38,8 @@
     </div>
   </main>
 
-  <section class="search-results wrapper">
-    <div class="scroller">
-      <ul>
-        <li class="item">
-          <span class="char"></span>
-          <span class="name"></span>
-          <span class="code"></span>
-          <button class="copy">Copy</button>
-        </li>
-      </ul>
-    </div>
-  </section>
+  <table class="search-results">
+  </table>
 
   <script>
     // You can also require other files to run in this process

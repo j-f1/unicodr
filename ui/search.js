@@ -1,32 +1,37 @@
 var $ = require('jquery');
 
-{
-  let row = $('.search-results .item');
-  for (var i = 1; i < 10; i++) {
-    row.clone().appendTo($('.search-results ul'));
-  }
-}
+let tmpl =
+`<tr class="item">
+  <td class="char">&#xA0;</td>
+  <td class="code"></td>
+  <td class="name"></td>
+  <td><button class="btn copy">Copy</button></td>
+</tr>`;
 
-var _filtered = [];
-
-window.loadUnicodeData.then(data => {
-  window.searchScroller = createScroller({data, wrapperSelector:'.search-results', rowSelector:'.item',
-  loadData: (start, count) => _filtered.slice(start, count),
-  renderData: (el, char) => char.fillView(el) });
-  setTimeout(() => {
-    $('.search-results').hide();
-  }, 10);
+window.loadUnicodeData.then(() => {
+  $('.search-results').hide();
 });
 
 $('.search').on('change', (e) => {
-  var val = e.target.value.toLowerCase();
-  if (val.length) {
-    $('main').fadeOut();
-    $('.search-results').fadeIn();
-    _filtered = UNICODE_DATA.slice().filter(char => char.matches(val));
-    console.log(_filtered.map(item => item.toString()));
-  } else {
-    $('main').fadeIn();
-    $('.search-results').fadeOut();
-  }
+  setTimeout(() => {
+    var val = e.target.value.toLowerCase();
+    if (val.length) {
+      let _filtered = UNICODE_DATA.filter(char => char.matches(val));
+
+      let _els = _filtered.map(char => char.fillView($(tmpl)[0]));
+      var $results = $('.search-results').empty().remove();
+      _els.forEach(el => {
+        $results.append(el);
+      });
+      $results.appendTo('body');
+
+      $('main').fadeOut();
+      $('.search-results').fadeIn();
+    } else {
+      $('main').fadeIn();
+      $('.search-results').fadeOut(function () {
+        $(this).empty();
+      });
+    }
+  });
 });
