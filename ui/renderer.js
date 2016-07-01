@@ -1,6 +1,6 @@
 var $ = require('jquery');
 
-module.exports = createScroller = ({data, wrapperSelector, rowSelector, loadData, renderData}) => {
+module.exports = createScroller = ({data, wrapperSelector, rowSelector, loadData, renderData, cache=1000}) => {
   var scroller = new IScroll(wrapperSelector, {
     mouseWheel: true,
     infiniteElements: wrapperSelector + ' ' + rowSelector,
@@ -16,7 +16,7 @@ module.exports = createScroller = ({data, wrapperSelector, rowSelector, loadData
         renderData(el, char);
       }
     },
-    cacheSize: 10000
+    cacheSize: cache
   });
   return scroller;
 };
