@@ -1,4 +1,112 @@
-import unicodedata, sys
+import unicodedata, sys, threading
+
+# from http://www.interclasse.com/scripts/spin.php, by Branimir Petrovic.
+class ProgressBase(threading.Thread):
+    """Base class - not to be instantiated."""
+
+    def __init__(self):
+        self.rlock = threading.RLock()
+        self.cv = threading.Condition()
+        threading.Thread.__init__(self)
+        self.setDaemon(1)
+
+    def __backStep(self):
+        if self.inplace: sys.stdout.write('\b \b')
+
+    def __call__(self):
+        self.start()
+
+    def start(self):
+        self.stopFlag = 0
+        threading.Thread.start(self)
+
+    def stop(self):
+        """To be called by the 'main' thread: Method will block
+        and wait for the thread to stop before returning control
+        to 'main'."""
+
+        self.stopFlag = 1
+
+        # Wake up 'Sleeping Beauty' ahead of time (if it needs to)...
+        self.cv.acquire()
+        self.cv.notify()
+        self.cv.release()
+
+        # Block and wait here untill thread fully exits its run method.
+        self.rlock.acquire()
+
+class Spinner(ProgressBase):
+    """Print 'animated' /|\ sequence to stdout in separate thread"""
+
+    def __init__(self, speed=0.025, length=50):
+        self.__seq = r'\|/-'
+        self.__speed = speed
+        self.__length = length
+        self.inplace = 1
+        ProgressBase.__init__(self)
+
+    def run(self):
+        '''
+        Displays:
+        `.`*length
+        then, add one • each frame until full
+        then, add one . from the start each frame until full
+        '''
+        self.rlock.acquire()
+        self.cv.acquire()
+        sys.stdout.write(' ')
+        chars = '#-'
+        insertIdx = 0
+        string = list(chars[1] * (self.__length))
+        clearLen = self.__length + 12
+
+        while 1:
+            for i in range(self.__length):
+                self.cv.wait(self.__speed)  # 'Sleeping Beauty' part
+                string[i] = chars[insertIdx]
+                if self.stopFlag:
+                    sys.stdout.write('\b' * clearLen + ' ' * clearLen + '\b' * clearLen)
+                    try :
+                        return                          ### >>>
+                    finally :
+                        # release lock immediately after returning
+                        self.rlock.release()
+                if self.inplace: sys.stdout.write('\b' * clearLen)
+                sys.stdout.write('Writing…: [' + ''.join(string) + ']')
+                sys.stdout.flush()
+            insertIdx += 1
+            while insertIdx >= len(chars):
+                insertIdx -= len(chars)
+
+# end from
+
+verbose = False
+if len(sys.argv) >= 2 and sys.argv[1] == "-v":
+    verbose = True
+
+def printProgress (iteration, total, prefix = '', suffix = '', decimals = 2, barLength = 100):
+    """
+    FROM http://stackoverflow.com/a/34325723/5244995
+
+    Call in a loop to create terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : number of decimals in percent complete (Int)
+        barLength   - Optional  : character length of bar (Int)
+    """
+    filledLength    = int(round(barLength * iteration / float(total)))
+    percents        = round(100.00 * (iteration / float(total)), decimals)
+    bar             = '#' * filledLength + '-' * (barLength - filledLength)
+    sys.stdout.write('%s [%s] %s%s %s\r' % (prefix, bar, percents, '%', suffix)),
+    sys.stdout.flush()
+    if iteration == total:
+        print("\n")
+
+
+
 def fromCode(code):
     if sys.version[0] == '2':
         return unichr(code)
@@ -39,11 +147,15 @@ def isBadCode(code):
 EXCLUDE = [None, "REPLACEMENT CHARACTER"]
 
 data = []
+if verbose:
+    print('Generating Data...')
 for code in range(0xE0000):
     if isBadCode(code): continue
     info = charInfo(code)
     if info:
         data.append(info)
+    if verbose and code % 100 == 0:
+        printProgress(code, 0xE0000, prefix = 'Progress:', suffix = 'Complete', barLength = 50)
 
 # pip install cbor2
 import zipfile
@@ -52,7 +164,15 @@ try:
 except ImportError:
     print('Oh, no! Did you run `pip install cbor2`?')
     cbor2 = None
+if verbose:
+    print('\nWriting file...')
+    indicator = Spinner()
+    indicator.start()
 
 with zipfile.ZipFile('../data.dat', 'w') as f:
     cborData = cbor2.dumps(data)
-    f.writestr('data.cbor', cborData, zipfile.ZIP_LZMA)
+    f.writestr('data.cbor', cborData, zipfile.ZIP_DEFLATED)
+
+if verbose:
+    indicator.stop()
+    print('Done.')
