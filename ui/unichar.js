@@ -2,8 +2,7 @@ var $ = require('jquery');
 
 class UniChar {
   constructor({name, code}) {
-    this.name = name;
-    this._lname = name.toLowerCase();
+    this.name = name.toLowerCase();
     this.code = code;
     this.char = String.fromCharCode(code);
   }
@@ -32,11 +31,11 @@ class UniChar {
     (view.querySelector('.char') || {}).textContent = this.char;
     (view.querySelector('.code') || {}).textContent = this.prettyCode;
     (view.querySelector('.name') || {}).textContent = this.name;
-    view.title = this.name.toLowerCase();
+    view.title = this.name;
     return view;
   }
   matches(name /* must be all lowercase */) {
-    return this._lname.indexOf(name) !== -1;
+    return this.name.indexOf(name) !== -1;
   }
 }
 UniChar.tmpl =
