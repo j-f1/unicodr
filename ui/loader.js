@@ -24,26 +24,21 @@ window.throwOnFail = err => {
     }
   }
 };
-const { decompressFile } = require('lzma-purejs');
+window.zlib = require('zlib');
 
 module.exports = loadUnicodeData = new Promise(function(resolve, reject) {
-  let UNICODE_DATA = [];
-
-  let fileStream = fs.createReadStream(path.join(__dirname, '../data.dat'));
-  $.extend(fileStream, {
-    readByte: fileStream.read.bind(fileStream, 1)
+  setTimeout(() => {
+    let fileStream = fs.createReadStream(path.join(__dirname, '../data.dat'));
+    fileStream.on('error', reject);
+    let gzip = zlib.createUnzip();
+    gzip.on('error', reject);
+    let decoder = new CBOR.Decoder();
+    decoder.on('data', ({value}) => {
+      resolve(value.map(data => new UniChar(data.value)));
+    });
+    decoder.on('error', reject);
+    fileStream.pipe(gzip).pipe(decoder);
   });
-  fileStream.on('error', reject);
-
-  let cborStream = new CBOR.Decoder();
-  $.extend(cborStream, {
-    writeByte: cborStream.write.bind(fileStream)
-  });
-  cborStream.on('complete', resolve).on('error', reject);
-
-  fileStream.resume();
-
-  setTimeout(() => decompressFile(fileStream, cborStream));
 });
 
 ////////////////////////////////////////////////////////////////////////////////
