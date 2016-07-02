@@ -53,6 +53,6 @@ except ImportError:
     print('Oh, no! Did you run `pip install cbor2`?')
     cbor2 = None
 
-with zipfile.ZipFile('./data.dat', 'w') as f:
+with zipfile.ZipFile('../data.dat', 'w') as f:
     cborData = cbor2.dumps(data)
     f.writestr('data.cbor', cborData, zipfile.ZIP_LZMA)
