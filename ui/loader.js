@@ -23,7 +23,7 @@ const throwOnFail = err => {
 
 module.exports = loadUnicodeData = new Promise(function(resolve, reject) {
   require('electron').ipcRenderer.once('UNICODE_DATA', (event, message) => {
-    resolve(message);
+    resolve(message.map(data => new UniChar(data)));
   }).once('UNICODE_DATA.err', (event, message) => {
     reject(message);
   });

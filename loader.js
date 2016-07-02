@@ -6,7 +6,7 @@ const zlib = require('zlib');
 
 module.exports = new Promise(function(resolve, reject) {
   setTimeout(() => {
-    let fileStream = fs.createReadStream(path.join(__dirname, '../data.dat'));
+    let fileStream = fs.createReadStream(path.join(__dirname, 'data.dat'));
     fileStream.on('error', reject);
 
     let gzip = zlib.createUnzip();
@@ -14,7 +14,7 @@ module.exports = new Promise(function(resolve, reject) {
 
     let decoder = new CBOR.Decoder();
     decoder.on('data', ({value}) => {
-      resolve(value.map(data => new UniChar(data.value)));
+      resolve(value.map(data => data.value));
     });
     decoder.on('error', reject);
 
