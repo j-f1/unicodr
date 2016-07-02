@@ -205,7 +205,7 @@ if verbose:
     indicator = Spinner()
     indicator.start()
 
-compressed = zlib.compress(cborData)
+compressed = zlib.compress(cborData, 9)
 
 if verbose:
     indicator.stop()
