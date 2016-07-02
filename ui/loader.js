@@ -1,4 +1,4 @@
-var $ = require('jquery');
+const $ = require('jquery');
 
 {
   let row = $('main .row');
@@ -12,26 +12,38 @@ var $ = require('jquery');
 }
 
 window.promisify = require('promisify-node');
-window.python = promisify(require('python').shell);
 window.path = require('path');
 window.fs = promisify(require('fs'));
+window.CBOR = require('cbor');
+window.throwOnFail = err => {
+  if (err) {
+    if (err instanceof Error) {
+      throw err;
+    } else {
+      throw new Error(err);
+    }
+  }
+};
+const { decompressFile } = require('lzma-purejs');
 
 module.exports = loadUnicodeData = new Promise(function(resolve, reject) {
   let UNICODE_DATA = [];
-  fs.readFile(path.join(__dirname, 'load.py'), 'utf-8').then(pythonCode => {
-    $('.loader p').html('Building&hellip;');
-    python(pythonCode).then(json => {
-      json = json.replace(/^Command Start\n/, '');
-      var data = JSON.parse(json);
-      data.forEach(charInfo => {
-        let char = new UniChar(charInfo);
-        UNICODE_DATA.push(char);
-      });
-      resolve(UNICODE_DATA);
-    });
-  }, err => {
-    reject(err);
+
+  let fileStream = fs.createReadStream(path.join(__dirname, '../data.dat'));
+  $.extend(fileStream, {
+    readByte: fileStream.read.bind(fileStream, 1)
   });
+  fileStream.on('error', reject);
+
+  let cborStream = new CBOR.Decoder();
+  $.extend(cborStream, {
+    writeByte: cborStream.write.bind(fileStream)
+  });
+  cborStream.on('complete', resolve).on('error', reject);
+
+  fileStream.resume();
+
+  setTimeout(() => decompressFile(fileStream, cborStream));
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -57,4 +69,4 @@ loadUnicodeData.then(data => {
     $('body').addClass('ready');
   }, 100);
   $('.loader').remove();
-}, err => {throw err;});
+}, throwOnFail);
