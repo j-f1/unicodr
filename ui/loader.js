@@ -11,11 +11,7 @@ const $ = require('jquery');
   }
 }
 
-window.promisify = require('promisify-node');
-window.path = require('path');
-window.fs = promisify(require('fs'));
-window.CBOR = require('cbor');
-window.throwOnFail = err => {
+const throwOnFail = err => {
   if (err) {
     if (err instanceof Error) {
       throw err;
@@ -24,24 +20,14 @@ window.throwOnFail = err => {
     }
   }
 };
-window.zlib = require('zlib');
 
 module.exports = loadUnicodeData = new Promise(function(resolve, reject) {
-  setTimeout(() => {
-    let fileStream = fs.createReadStream(path.join(__dirname, '../data.dat'));
-    fileStream.on('error', reject);
-    let gzip = zlib.createUnzip();
-    gzip.on('error', reject);
-    let decoder = new CBOR.Decoder();
-    decoder.on('data', ({value}) => {
-      resolve(value.map(data => new UniChar(data.value)));
-    });
-    decoder.on('error', reject);
-    fileStream.pipe(gzip).pipe(decoder);
+  require('electron').ipcRenderer.once('UNICODE_DATA', (event, message) => {
+    resolve(message);
+  }).once('UNICODE_DATA.err', (event, message) => {
+    reject(message);
   });
 });
-
-////////////////////////////////////////////////////////////////////////////////
 
 loadUnicodeData.then(data => {
   window.UNICODE_DATA = data;
