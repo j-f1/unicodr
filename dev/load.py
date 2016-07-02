@@ -38,8 +38,35 @@ class ProgressBase(threading.Thread):
 class Spinner(ProgressBase):
     """Print 'animated' /|\ sequence to stdout in separate thread"""
 
-    def __init__(self, speed=0.025, length=50):
+    def __init__(self, speed=0.1):
         self.__seq = r'\|/-'
+        self.__speed = speed
+        self.inplace = 1
+        ProgressBase.__init__(self)
+
+    def run(self):
+        self.rlock.acquire()
+        self.cv.acquire()
+        sys.stdout.write(' ')
+        while 1:
+            for char in self.__seq:
+                self.cv.wait(self.__speed)  # 'Sleeping Beauty' part
+                if self.stopFlag:
+                    self._ProgressBase__backStep()
+                    try :
+                        return                          ### >>>
+                    finally :
+                        # release lock immediatley after returning
+                        self.rlock.release()
+                if self.inplace: sys.stdout.write('\b')
+                sys.stdout.write(char)
+                sys.stdout.flush()
+
+
+class Bar(ProgressBase):
+    '''Modified from spinner'''
+
+    def __init__(self, speed=0.025, length=50):
         self.__speed = speed
         self.__length = length
         self.inplace = 1
@@ -157,22 +184,40 @@ for code in range(0xE0000):
     if verbose and code % 100 == 0:
         printProgress(code, 0xE0000, prefix = 'Progress:', suffix = 'Complete', barLength = 50)
 
-# pip install cbor2
-import zipfile
+import zlib
 try:
     import cbor2
 except ImportError:
     print('Oh, no! Did you run `pip install cbor2`?')
     cbor2 = None
+
 if verbose:
-    print('\nWriting file...')
+    print('\nConverting to CBOR...', end=' ')
     indicator = Spinner()
     indicator.start()
 
-with zipfile.ZipFile('../data.dat', 'w') as f:
-    cborData = cbor2.dumps(data)
-    f.writestr('data.cbor', cborData, zipfile.ZIP_DEFLATED)
+cborData = cbor2.dumps(data)
+
+if verbose:
+    indicator.stop()
+    print('Done.\nCompressing...', end=' ')
+
+    indicator = Spinner()
+    indicator.start()
+
+compressed = zlib.compress(cborData)
+
+if verbose:
+    indicator.stop()
+    print('Done.\nWriting...', end=' ')
+
+    indicator = Spinner()
+    indicator.start()
+
+with open('../data.dat', 'wb') as f:
+    f.write(compressed)
 
 if verbose:
     indicator.stop()
     print('Done.')
+    indicator = None
