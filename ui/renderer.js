@@ -7,7 +7,7 @@ module.exports = createScroller = ({data, wrapperSelector, rowSelector, loadData
     disableMouse: true,
     disablePointer: true,
     dataset: (start, count) => {
-      setTimeout(() => {
+      setImmediate(() => {
         scroller.updateCache(start, loadData(start, count).filter(x=>!!x));
       });
     },

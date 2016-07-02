@@ -5,7 +5,7 @@ const CBOR = require('cbor');
 const zlib = require('zlib');
 
 module.exports = new Promise(function(resolve, reject) {
-  setTimeout(() => {
+  setImmediate(() => {
     let fileStream = fs.createReadStream(path.join(__dirname, 'data.dat'));
     fileStream.on('error', reject);
 

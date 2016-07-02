@@ -9,7 +9,7 @@ let tmpl =
 </tr>`;
 
 $('.search').on('change', ({target}) => {
-  setTimeout(() => {
+  setImmediate(() => {
     var val = target.value.toLowerCase();
     if (val.length) {
       let _filtered = UNICODE_DATA.filter(char => char.matches(val));
