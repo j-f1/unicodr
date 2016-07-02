@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "data": "python3 dev/load.py",
     "watch": "sass --watch ui/index.scss:ui/index.css"
   },
   "repository": {

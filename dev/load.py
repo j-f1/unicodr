@@ -108,8 +108,11 @@ class Bar(ProgressBase):
 # end from
 
 verbose = False
-if len(sys.argv) >= 2 and sys.argv[1] == "-v":
+if len(sys.argv) >= 2 and "-v" in sys.argv[1:]:
     verbose = True
+else:
+    if len(sys.argv) < 2 or "-q" not in sys.argv[1:]:
+        print('Pass `-v` to python or `-- -v` to npm run to get visual feedback. Pass `-q` or `-- -q` to silence this message.', file=sys.stderr)
 
 def printProgress (iteration, total, prefix = '', suffix = '', decimals = 2, barLength = 100):
     """
