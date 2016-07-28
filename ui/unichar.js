@@ -1,4 +1,5 @@
 var $ = require('jquery');
+var {clipboard} = require('electron');
 
 class UniChar {
   constructor({name, code}) {
@@ -25,6 +26,9 @@ class UniChar {
     $view.each(function(i, el) {
       this.fillView(el);
     });
+  }
+  copy() {
+    clipboard.writeText(event.target.innerHTML);
   }
   fillView(view) {
     if (!view) return;
