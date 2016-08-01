@@ -5,6 +5,12 @@ const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
+// const {"default": installExtension, REACT_DEVELOPER_TOOLS} = require('electron-devtools-installer');
+// console.log(installExtension);
+// installExtension(REACT_DEVELOPER_TOOLS)
+//   .then((name) => console.log(`Added Extension:  ${name}`))
+//   .catch((err) => console.log('An error occurred: ', err));
+
 const loadUnicodeData = require('./loader.js')
 var unicodeData = null,
     unicodeDataErr = null
