@@ -25,13 +25,17 @@
   },
   "homepage": "https://github.com/electron/electron-quick-start#readme",
   "devDependencies": {
-    "electron-prebuilt": "^1.2.0"
+    "electron-devtools-installer": "^2.0.0",
+    "electron-prebuilt": "^1.2.0",
+    "react": "^15.2.1",
+    "react-dom": "^15.2.1"
   },
   "dependencies": {
     "cbor": "^1.0.4",
     "jquery": "^3.0.0",
     "lzma-purejs": "^0.9.3",
     "promisify-node": "^0.4.0",
-    "python": "0.0.4"
+    "react-addons-shallow-compare": "^15.2.1",
+    "react-virtualized": "^7.16.0"
   }
 }
