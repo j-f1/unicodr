@@ -104,55 +104,56 @@ main {
   }
 }
 
-main .scroller {
-  .row {
+.inline-block {
+  display: inline-block;
+}
+
+#main {
+  height: 100vw;
+  width: 100vw;
+  .item {
     display: flex;
-    height: 20vw; // hack. WHY????
-    width: 100vw;
-    .item {
-      display: flex;
-      flex: 1;
-      min-width: 20vw;
-      max-width: 20vw;
-      height: 20vw;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      position: relative;
-      .char {
-        cursor: pointer;
-        -webkit-user-select: none;
-        min-height: 8vw;
-        font-size:  8vw;
-        font-family: sans-serif;
-        width: 100%;
-        text-align: center;
-        &:hover ~ .note {
-          opacity: 1;
-        }
+    flex: 1;
+    min-width: 20vw;
+    max-width: 20vw;
+    height: 20vw;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+    .char {
+      cursor: pointer;
+      -webkit-user-select: none;
+      min-height: 8vw;
+      font-size:  8vw;
+      font-family: sans-serif;
+      width: 100%;
+      text-align: center;
+      &:hover ~ .note {
+        opacity: 1;
       }
-      .code {
-        margin-top: 1vw;
-        font-size: 1vw;
-        font-family: monospace;
-        pointer-events: none;
-        -webkit-user-select: none;
-      }
-      .note {
-        background: transparentize(black, 0.5);
-        color: white;
-        border-radius: 0.75vw;
-        padding: 0.5vw;
-        width: 50%;
-        text-align: center;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.2s;
-        order: -1;
-        margin-bottom: -3vw;
-        z-index: 1;
-        font-size: 1.6vw;
-      }
+    }
+    .code {
+      margin-top: 1vw;
+      font-size: 1vw;
+      font-family: monospace;
+      pointer-events: none;
+      -webkit-user-select: none;
+    }
+    .note {
+      background: transparentize(black, 0.5);
+      color: white;
+      border-radius: 0.75vw;
+      padding: 0.5vw;
+      width: 50%;
+      text-align: center;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+      order: -1;
+      margin-bottom: -3vw;
+      z-index: 1;
+      font-size: 1.6vw;
     }
   }
 }
