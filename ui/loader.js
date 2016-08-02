@@ -1,4 +1,5 @@
 const $ = require('jquery');
+const UniChar = require('./unichar.js');
 
 {
   let row = $('main .row');
@@ -32,20 +33,6 @@ module.exports = loadUnicodeData = new Promise(function(resolve, reject) {
 loadUnicodeData.then(data => {
   window.UNICODE_DATA = data;
   $('.loader p').html('Creating&hellip;');
-  var rows = [];
-  for (var i = 0; i < data.length; i++) {
-    if (i % 5 === 0) {
-      rows.push([]);
-    }
-    rows[rows.length-1].push(data[i]);
-  }
-  window.scroller = createScroller({data, wrapperSelector:'main', rowSelector: '.row',
-  loadData:(start, count) => rows.slice(start, count),
-  renderData: (el, data) => {
-    $(el).children().each((i, el) => {
-      data[i].fillView(el);
-    });
-  } });
   setTimeout(() => {
     $('body').addClass('ready');
   }, 100);
