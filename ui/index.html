@@ -8,10 +8,7 @@
     <script>
       window.$ = window.jQuery = require('jquery');
     </script>
-    <script src="vendor/iscroll-infinite.js" charset="utf-8"></script>
-    <script>
-      window.IScroll = module.exports;
-    </script>
+    <script src="vendor/babel.js" charset="utf-8"></script>
   </head>
   <body>
     <header>
@@ -24,7 +21,7 @@
     <div class="progress"></div>
   </div>
 
-  <main class="wrapper">
+  <main id="main" class="wrapper">
   	<div class="scroller">
       <ul>
         <li class="row">
@@ -44,17 +41,30 @@
     </table>
   </div>
 
-  <script>
+  <script src="react.jsx" type="text/babel" charset="utf-8"></script>
+
+  <script type="text/babel">
     // You can also require other files to run in this process
     // This file is required by the index.html file and will
     // be executed in the renderer process for that window.
     // All of the Node.js APIs are available in this process.
 
-    window.UniChar = require('./unichar.js');
-    window.createScroller = require('./renderer.js');
-    window.loadUnicodeData = require('./loader.js');
+    var UniChar = require('./unichar.js');
+    var createScroller = require('./renderer.js');
+    var loadUnicodeData = require('./loader.js');
     require('./search.js');
-    window.currentBrowserWindow = require('./misc.js');
-
+    var currentBrowserWindow = require('./misc.js');
+    var React = require('react');
+    var {render} = require('react-dom');
+    loadUnicodeData.then(chars => {
+      // jshint ignore:start
+      render(<MainGrid
+        cols={5}
+        chars={chars}
+        containerId='main'
+        headerHeight={40}
+      />, document.getElementById('main'));
+      // jshint ignore:end
+    });
   </script>
 </html>
