@@ -36,8 +36,3 @@ $('.search').on('change', ({target}) => {
     $(target).val('').trigger('change');
   }
 });
-
-$('body').on('click', '.search-results .copy', ({target}) => {
-  const {clipboard} = require('electron');
-  clipboard.writeText($(target).parents('.item').find('.char').text());
-});
