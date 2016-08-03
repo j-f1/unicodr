@@ -2,7 +2,6 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 const {clipboard} = require('electron');
 const nbsp = String.fromCharCode(0xA0);
-var {Grid, VirtualScroll} = require('react-virtualized');
 
 class CharComponent extends React.Component {
   get char() {
@@ -27,12 +26,12 @@ class GridItem extends CharComponent {
 class SearchResult extends CharComponent {
   render() {
     // jshint ignore:start
-    return (<tr className="item">
-      <td className="char">{this.char.char || nbsp}</td>
-      <td className="code">{this.char.prettyCode}</td>
-      <td className="name">{this.char.name}</td>
-      <td><button className="btn" onClick={this.char.copy}>Copy</button></td>
-    </tr>)
+    return (<div className="item">
+      <span className="char">{this.char.char || nbsp}</span>
+      <span className="code">{this.char.prettyCode}</span>
+      <span className="name">{this.char.name}</span>
+      <button className="btn btn-sm" onClick={this.char.copy}>Copy</button>
+    </div>)
     // jshint ignore:end
   }
 }
@@ -78,6 +77,7 @@ class MainGrid extends GridComponent {
   }
   render() {
     // jshint ignore:start
+    return <div />
     return (<Grid
       cellClassName="inline-block"
       columnCount={this.props.cols}
@@ -101,12 +101,11 @@ class SearchResults extends GridComponent {
   render() {
     // jshint ignore:start
     return (<VirtualScroll
-      width={this._width}
-      height={this._height}
-      rowHeight={this._autoHeight.bind(this)}
-      rowRenderer={this._getCell.bind(this)}
-      rowCount={this.props.chars.length}
-      _updater={{x:window.innerWidth, y:window.innerHeight}}
+      ref={c=>this.scroller=c}
+      count={this.props.chars.length}
+      rowHeight={window.innerWidth / 10}
+      renderer={(i) => <SearchResult char={this.props.chars[i]} />}
+      {...this.props}
     />)
     // jshint ignore:end
   }
@@ -114,3 +113,5 @@ class SearchResults extends GridComponent {
 
 window.SearchResults = SearchResults;
 window.MainGrid = MainGrid;
+
+window.SearchResult = SearchResult;
