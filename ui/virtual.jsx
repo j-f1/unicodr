@@ -54,6 +54,7 @@ window.VirtualScroll = class VirtualScroll extends React.Component {
   }
   _styleForRow(i) {
     return {
+      width: '100%',
       position: 'absolute',
       transform: 'translateY('+ ((i * this.props.rowHeight - this.state.scrollPos) + this.props.topInset) +'px)'
     };
@@ -73,6 +74,7 @@ window.VirtualScroll = class VirtualScroll extends React.Component {
   }
   get _mainStyle() {
     return {
+      position: 'relative',
       width: '100%',
       height: '100%'
     };
