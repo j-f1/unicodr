@@ -30,22 +30,8 @@ class UniChar {
   copy() {
     clipboard.writeText(event.target.innerHTML);
   }
-  fillView(view) {
-    if (!view) return;
-    (view.querySelector('.char') || {}).textContent = this.char;
-    (view.querySelector('.code') || {}).textContent = this.prettyCode;
-    (view.querySelector('.name') || {}).textContent = this.name;
-    view.title = this.name;
-    return view;
-  }
   matches(name /* must be all lowercase */) {
     return this.name.indexOf(name) !== -1;
   }
 }
-UniChar.tmpl =
-`<span class="item">
-  <span class="char"></span>
-  <span class="code"></span>
-  <span class="note">Click to copy</span>
-</span>`;
 module.exports = UniChar;

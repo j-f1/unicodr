@@ -2,14 +2,6 @@ var $ = require('jquery');
 var React = require('react');
 var {render, unmountComponentAtNode} = require('react-dom');
 
-let tmpl =
-`<tr class="item">
-  <td class="char">&#xA0;</td>
-  <td class="code"></td>
-  <td class="name"></td>
-  <td><button class="btn copy">Copy</button></td>
-</tr>`;
-
 let _listener = null;
 
 $('.search').on('change', ({target}) => {
