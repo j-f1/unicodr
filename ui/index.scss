@@ -169,10 +169,23 @@ main {
   margin: auto;
   .item {
     height: 10vw;
+    width: 100%;
 
+    display: flex;
+    align-items: center;
+
+    &>* {
+      &:not(:first-child) {
+        margin-left: 0.25em;
+      }
+      &:not(:last-child) {
+        margin-right: 0.25em;
+      }
+    }
     .char {
       font-size: 10vw*(7/8);
       text-align: center;
+      width: 1em;
     }
     .code {
       font-family: monospace;
@@ -183,6 +196,9 @@ main {
       &::after {
         content: ')';
       }
+    }
+    .name {
+      flex: 1;
     }
   }
 }
