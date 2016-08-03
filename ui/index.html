@@ -36,12 +36,12 @@
     </div>
   </main>
 
-  <div class="search-results-wrap" style="display: none;">
-    <table class="search-results">
-    </table>
+  <div class="search-results" style="display: none;">
   </div>
 
+  <script src="virtual.jsx" type="text/babel" charset="utf-8"></script>
   <script src="react.jsx" type="text/babel" charset="utf-8"></script>
+  <script src="search.jsx" type="text/babel" charset="utf-8"></script>
 
   <script type="text/babel">
     // You can also require other files to run in this process
@@ -52,19 +52,22 @@
     var UniChar = require('./unichar.js');
     var createScroller = require('./renderer.js');
     var loadUnicodeData = require('./loader.js');
-    require('./search.js');
     var currentBrowserWindow = require('./misc.js');
     var React = require('react');
     var {render} = require('react-dom');
     loadUnicodeData.then(chars => {
       // jshint ignore:start
-      render(<MainGrid
-        cols={5}
-        chars={chars}
-        containerId='main'
-        headerHeight={40}
-      />, document.getElementById('main'));
-      // jshint ignore:end
+      let run = () => {
+        render(<MainGrid
+          cols={5}
+          chars={chars}
+          containerId='main'
+          headerHeight={40}
+        />, document.getElementById('main'));
+        // jshint ignore:end
+      }
+      run();
+      window.addEventListener('resize', run);
     });
   </script>
 </html>

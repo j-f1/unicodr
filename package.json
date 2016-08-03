@@ -33,9 +33,9 @@
   "dependencies": {
     "cbor": "^1.0.4",
     "jquery": "^3.0.0",
+    "lru-cache": "^4.0.1",
     "lzma-purejs": "^0.9.3",
     "promisify-node": "^0.4.0",
-    "react-addons-shallow-compare": "^15.2.1",
-    "react-virtualized": "^7.16.0"
+    "react-addons-shallow-compare": "^15.2.1"
   }
 }
