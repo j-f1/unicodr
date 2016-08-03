@@ -4,13 +4,16 @@ var LRU = require('lru-cache');
 
 window.VirtualScroll = class VirtualScroll extends React.Component {
   // PUBLIC API //
-  forceUpdate(i) {
-    // Call this to force reload row `i` (in the future).
+  reloadRow(i) {
+    // Call this to reload row `i` (the next time the component renders it).
     this._cache.del(i);
   }
-  forceReload() {
-    // call this to force reload all rows.
+  reloadData() {
+    // call this to reload all rows.
     this._cache.reset();
+  }
+  scrollTo(scrollPos) {
+    this.setState({scrollPos});
   }
   // PRIVATE & REACT API //
   constructor(...args) {
