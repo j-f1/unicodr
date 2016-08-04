@@ -31,6 +31,7 @@ mb.on('ready', () => {
     loadUnicodeData.then(data => {
       mb.window.webContents.send('UNICODE_DATA', data);
     }, err => {
+      console.log(err);
       mb.window.webContents.send('UNICODE_DATA.err', err);
     });
   });
