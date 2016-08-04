@@ -181,10 +181,12 @@ main {
   min-width: 500px;
   margin: auto;
   position: relative;
+  margin-top: -2.5em;
   .exact-match {
     position: absolute;
     width: 100%;
     z-index: 1;
+    top: 2.5em;
     &::before {
       content: '';
       width: 100vw;
