@@ -42,7 +42,7 @@ window.VirtualScroll = class VirtualScroll extends React.Component {
     if (newScroll < 0) {
       newScroll = 0;
     }
-    let max = ((this.props.rowHeight * this.props.count) - window.innerHeight);
+    let max = ((this.props.rowHeight * this.props.count) - window.innerHeight) + this.props.topInset;
     if (newScroll > max) {
       newScroll = max;
     }
