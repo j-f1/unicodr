@@ -54,30 +54,35 @@ class GridItem extends CharComponent {
   }
 }
 
-class MainGrid extends GridComponent {
-  _getCell({columnIndex, rowIndex}) {
-    if (rowIndex === 0) {
-      // jshint ignore:start
-      return <div className="top" />;
-      // jshint ignore:end
-    }
-    let index = (rowIndex * this.props.cols) + columnIndex;
+class GridRow extends React.Component {
+  render() {
+    let start = this.props.row * this.props.cols;
+    let chars = this.props.chars.slice(start, start + this.props.cols);
     // jshint ignore:start
-    return this._fromCache(index, () => <GridItem char={this.props.chars[index]} />)
+    return (<div className="row">
+      {chars.map(char => <GridItem key={char} char={char} />)}
+    </div>)
     // jshint ignore:end
   }
+}
+GridRow.propTypes = {
+  chars: React.PropTypes.arrayOf(React.PropTypes.instanceOf(require('./unichar.js'))).isRequired,
+  cols: React.PropTypes.number,
+  row: React.PropTypes.number.isRequired,
+};
+GridRow.defaultProps = {
+  cols: 5,
+};
+
+class MainGrid extends GridComponent {
   render() {
     // jshint ignore:start
-    return <div />
-    return (<Grid
-      cellClassName="inline-block"
-      columnCount={this.props.cols}
-      rowCount={this.props.chars.length/this.props.cols}
-      columnWidth={this._autoWidth.bind(this)}
-      cellRenderer={this._getCell.bind(this)}
-      height={this._height}
-      rowHeight={this._autoHeight.bind(this)}
-      width={this._width}
+    return (<VirtualScroll
+      rowHeight={window.innerWidth/5}
+      count={Math.ceil(this.props.chars.length/this.props.cols)}
+      topInset={2.5 * 16}
+      renderer={i => <GridRow chars={this.props.chars} cols={this.props.cols} row={i} />}
+      cache={Number.MAX_VALUE} // ♡ 4 ever!
     />)
     // jshint ignore:end
   }
