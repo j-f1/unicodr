@@ -3,38 +3,7 @@ var ReactDOM = require('react-dom');
 const {clipboard} = require('electron');
 const nbsp = String.fromCharCode(0xA0);
 
-class CharComponent extends React.Component {
-  get char() {
-    return this.props.char;
-  }
-  render() {throw new Error('Rendering an ABC');}
-}
-
-class GridItem extends CharComponent {
-  render() {
-    // jshint ignore:start
-    return (<span className="item">
-        <span className="char" onClick={this.char.copy}>{this.char.char}</span>
-        <span className="name">{this.char.name}</span>
-        <span className="code">{this.char.prettyCode}</span>
-        <span className="note">Click to copy</span>
-      </span>)
-    // jshint ignore:end
-  }
-}
-
-class SearchResult extends CharComponent {
-  render() {
-    // jshint ignore:start
-    return (<div className="item">
-      <span className="char">{this.char.char || nbsp}</span>
-      <span className="code">{this.char.prettyCode}</span>
-      <span className="name">{this.char.name}</span>
-      <button className="btn btn-sm" onClick={this.char.copy.bind(this.char)}>Copy</button>
-    </div>)
-    // jshint ignore:end
-  }
-}
+// ABC //
 
 class GridComponent extends React.Component {
   _autoWidth() {
@@ -63,6 +32,28 @@ class GridComponent extends React.Component {
   }
 }
 
+class CharComponent extends React.Component {
+  get char() {
+    return this.props.char;
+  }
+  render() {throw new Error('Rendering an ABC');}
+}
+
+// MAIN GRID //
+
+class GridItem extends CharComponent {
+  render() {
+    // jshint ignore:start
+    return (<span className="item">
+        <span className="char" onClick={this.char.copy}>{this.char.char}</span>
+        <span className="name">{this.char.name}</span>
+        <span className="code">{this.char.prettyCode}</span>
+        <span className="note">Click to copy</span>
+      </span>)
+    // jshint ignore:end
+  }
+}
+
 class MainGrid extends GridComponent {
   _getCell({columnIndex, rowIndex}) {
     if (rowIndex === 0) {
@@ -88,6 +79,21 @@ class MainGrid extends GridComponent {
       rowHeight={this._autoHeight.bind(this)}
       width={this._width}
     />)
+    // jshint ignore:end
+  }
+}
+
+// SEARCH RESULTS //
+
+class SearchResult extends CharComponent {
+  render() {
+    // jshint ignore:start
+    return (<div className="item">
+      <span className="char">{this.char.char || nbsp}</span>
+      <span className="code">{this.char.prettyCode}</span>
+      <span className="name">{this.char.name}</span>
+      <button className="btn btn-sm" onClick={this.char.copy.bind(this.char)}>Copy</button>
+    </div>)
     // jshint ignore:end
   }
 }
