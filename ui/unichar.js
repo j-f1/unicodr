@@ -17,8 +17,5 @@ class UniChar {
     }
     return "U+" + code;
   }
-  matches(name /* must be all lowercase */) {
-    return this.name.indexOf(name) !== -1;
-  }
 }
 module.exports = UniChar;

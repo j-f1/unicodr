@@ -1,15 +1,16 @@
 var $ = require('jquery');
 var React = require('react');
 var {render, unmountComponentAtNode} = require('react-dom');
+var {filter} = require('fuzzaldrin-plus');
 
 let _listener = null;
-const HEX_RE = /^\s*(?:U[+-]|0x|\+)?([0-9A-F]+)\s*$/i;
+const HEX_RE = /^\s*(?:U?[+-]?|0x|\+)?([0-9A-F]+)\s*$/i;
 
-$('.search').on('keyup', ({which, target}) => {
+$('.search').on('keydown keyup', ({which, target}) => {
   if (event.which !== 13) return; // enter
   var val = target.value.toLowerCase();
   if (val.length) {
-    let _filtered = UNICODE_DATA.filter(char => char.matches(val));
+    let _filtered = filter(UNICODE_DATA, val, {key: 'name'});
     if (_listener) {
       window.removeEventListener('resize', _listener);
       _listener = null;
