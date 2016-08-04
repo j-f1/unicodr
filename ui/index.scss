@@ -73,10 +73,7 @@ header {
   padding-left: 1em;
   box-sizing: border-box;
 
-  -webkit-app-region: drag;
-
   .search {
-    -webkit-app-region: no-drag;
     position: absolute;
     top: 0;
     width: calc(100% - 5em);
