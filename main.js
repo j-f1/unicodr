@@ -5,6 +5,7 @@ const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
+
 // const {"default": installExtension, REACT_DEVELOPER_TOOLS} = require('electron-devtools-installer');
 // console.log(installExtension);
 // installExtension(REACT_DEVELOPER_TOOLS)
@@ -12,13 +13,6 @@ const BrowserWindow = electron.BrowserWindow
 //   .catch((err) => console.log('An error occurred: ', err));
 
 const loadUnicodeData = require('./loader.js')
-var unicodeData = null,
-    unicodeDataErr = null
-loadUnicodeData.then(data => {
-  unicodeData = data
-}, err => {
-  unicodeDataErr = err
-})
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -40,17 +34,11 @@ function createWindow () {
   });
 
   mainWindow.webContents.on('did-finish-load', () => {
-    if (unicodeData) {
-      mainWindow.webContents.send('UNICODE_DATA', unicodeData)
-    } else if (unicodeDataErr) {
-      mainWindow.webContents.send('UNICODE_DATA.err', unicodeDataErr)
-    } else {
-      loadUnicodeData.then(data => {
-        mainWindow.webContents.send('UNICODE_DATA', data)
-      }, err => {
-        mainWindow.webContents.send('UNICODE_DATA.err', err)
-      })
-    }
+    loadUnicodeData.then(data => {
+      mainWindow.webContents.send('UNICODE_DATA', data)
+    }, err => {
+      mainWindow.webContents.send('UNICODE_DATA.err', err)
+    })
   })
 
   // Emitted when the window is closed.
