@@ -9,41 +9,53 @@ let l = v => console.log('loader: ' + v);
 // l = ()=>0; // Release
 
 let load = (resolve, reject) => {
-  let fileStream = fs.createReadStream(CACHE_PATH);
-  let decoder = new CBOR.Decoder();
-  decoder.on('data', ({value}) => {
-    l('CBOR data');
-    resolve(value.map(data => data.value));
-    l('resolved');
-  });
-  decoder.on('error', reject);
-  l('CBOR decoder created');
+  try {
+    let fileStream = fs.createReadStream(CACHE_PATH);
+    let decoder = new CBOR.Decoder();
+    decoder.on('data', ({value}) => {
+      l('CBOR data');
+      resolve(value.map(data => data.value));
+      l('resolved');
+    });
+    decoder.on('error', reject);
+    l('CBOR decoder created');
 
-  fileStream.pipe(decoder);
-  l('data piped');
+    fileStream.pipe(decoder);
+    l('data piped');
+  } catch(e) {
+    reject(e);
+  }
 };
 
 module.exports = new Promise(function(resolve, reject) {
-  fs.access(CACHE_PATH, fs.F_OK).then(() => {
-    load(resolve, reject);
-  }, () => {
-    l('start');
-    let readStream = fs.createReadStream(path.join(__dirname, 'data.dat'));
-    readStream.on('error', reject);
-    l('file stream created');
-
-    let gzip = zlib.createUnzip();
-    gzip.on('error', reject);
-    l('gzip stream created');
-
-    let writeStream = fs.createWriteStream(CACHE_PATH);
-    writeStream.on('error', reject);
-    writeStream.on('finish', () => {
+  try {
+    fs.access(CACHE_PATH, fs.F_OK).then(() => {
       load(resolve, reject);
-    });
-    l('write stream created');
+    }, () => {
+      try {
+        l('start');
+        let readStream = fs.createReadStream(path.join(__dirname, 'data.dat'));
+        readStream.on('error', reject);
+        l('file stream created');
 
-    readStream.pipe(gzip).pipe(writeStream);
-    l('piped.');
-  });
+        let gzip = zlib.createUnzip();
+        gzip.on('error', reject);
+        l('gzip stream created');
+
+        let writeStream = fs.createWriteStream(CACHE_PATH);
+        writeStream.on('error', reject);
+        writeStream.on('finish', () => {
+          load(resolve, reject);
+        });
+        l('write stream created');
+
+        readStream.pipe(gzip).pipe(writeStream);
+        l('piped.');
+      } catch (e) {
+        reject(e);
+      }
+    });
+  } catch (e) {
+    reject(e);
+  }
 });
