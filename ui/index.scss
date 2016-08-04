@@ -2,7 +2,17 @@ $header-height: 2.5em;
 @mixin font-stack($type) {
   font-family: SF UI $type, San Fransico $type, San Francisco, Helvetica Neue, Helvetica, Segoe UI, sans-serif;
 }
-
+@mixin header-shadow() {
+  content: '';
+  height: 5px;
+  background: linear-gradient(to bottom, rgba(204, 204, 204, 0.45), transparent);
+  display: block;
+  position: fixed;
+  width: 100vw;
+  left: 0;
+}
+$header-background: transparentize(#f0f0f0, 0.1);
+$header-border: #CCC;
 
 body {
   margin: 0;
@@ -51,9 +61,12 @@ html.fullscreen {
 header {
   z-index: 1;
   height: $header-height;
-  border-bottom: 1px solid #CCC;
-  box-shadow: 0 -20px 5px 20px #CCC; // spread & move up to avoid fade in corners.
-  background: transparentize(#f0f0f0, 0.1);
+  border-bottom: 1px solid $header-border;
+  &::after {
+    @include header-shadow;
+    margin-top: 2.5em;
+  }
+  background: $header-background;
   position: fixed;
   top: 0;
   width: 100vw;
@@ -167,6 +180,27 @@ main {
   width: 75vw;
   min-width: 500px;
   margin: auto;
+  position: relative;
+  .exact-match {
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+    &::before {
+      content: '';
+      width: 100vw;
+      background: $header-background;
+      border-bottom: 1px solid #CCC;
+      height: 10vh;
+      display: block;
+      position: fixed;
+      z-index: -1;
+      left: 0;
+    }
+    &::after {
+      @include header-shadow;
+      margin-top: -2px;
+    }
+  }
   .item {
     height: 10vw;
     width: 100%;

@@ -100,13 +100,16 @@ class SearchResults extends GridComponent {
   }
   render() {
     // jshint ignore:start
-    return (<VirtualScroll
-      ref={c=>this.scroller=c}
-      count={this.props.chars.length}
-      rowHeight={window.innerWidth / 10}
-      renderer={(i) => <SearchResult char={this.props.chars[i]} />}
-      {...this.props}
-    />)
+    return (<div>
+      {this.props.exactMatch && <div className="exact-match"><SearchResult char={this.props.exactMatch} /></div>}
+      <VirtualScroll
+        ref={c=>this.scroller=c}
+        count={this.props.chars.length}
+        rowHeight={window.innerWidth / 10}
+        renderer={(i) => <SearchResult char={this.props.chars[i]} />}
+        {...this.props}
+      />
+    </div>)
     // jshint ignore:end
   }
 }

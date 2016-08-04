@@ -3,8 +3,10 @@ var React = require('react');
 var {render, unmountComponentAtNode} = require('react-dom');
 
 let _listener = null;
+const HEX_RE = /^\s*(?:U[+-]|0x|\+)?([0-9A-F]+)\s*$/i;
 
-$('.search').on('change', ({target}) => {
+$('.search').on('keydown, keyup', ({which, target}) => {
+  if (event.which !== 13) return; // enter
   setImmediate(() => {
     var val = target.value.toLowerCase();
     if (val.length) {
@@ -13,11 +15,18 @@ $('.search').on('change', ({target}) => {
         window.removeEventListener('resize', _listener);
         _listener = null;
       }
+      let exactMatch;
+      let hex = HEX_RE.exec(val);
+      if (hex !== null) {
+        let code = parseInt(hex[1], 16);
+        exactMatch = UNICODE_DATA.filter(char => char.code === code)[0];
+      }
       let run = () => {
         render(React.createElement(SearchResults, {
           chars: _filtered,
-          topInset: 2.5 * 16,
-          scrollTo: 0
+          topInset: 2.5 * 16 + (!!exactMatch && window.innerWidth/10),
+          scrollTo: 0,
+          exactMatch,
         }), $('.search-results')[0]).scroller.scrollTo(0);
       };
       run();
