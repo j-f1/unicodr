@@ -5,7 +5,7 @@ class UniChar {
   constructor({name, code}) {
     this.name = name.toLowerCase();
     this.code = code;
-    this.char = String.fromCharCode(code);
+    this.char = String.fromCodePoint(code);
   }
   toString() {
     return `“${this.char}”: ${this.name} (${this.prettyCode})`;
