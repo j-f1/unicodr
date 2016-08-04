@@ -1,7 +1,7 @@
 {
-  "name": "electron-quick-start",
+  "name": "unicodr",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "View & Search for Unicode characters.",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -9,22 +9,7 @@
     "watch": "sass --watch ui/index.scss:ui/index.css",
     "fast": "NODE_ENV=production npm start"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/electron/electron-quick-start.git"
-  },
-  "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial"
-  ],
-  "author": "GitHub",
   "license": "CC0-1.0",
-  "bugs": {
-    "url": "https://github.com/electron/electron-quick-start/issues"
-  },
-  "homepage": "https://github.com/electron/electron-quick-start#readme",
   "devDependencies": {
     "electron-devtools-installer": "^2.0.0",
     "electron-prebuilt": "^1.2.0"
