@@ -17,19 +17,6 @@ class UniChar {
     }
     return "U+" + code;
   }
-  get HTML() {
-    let el = $(this.constructor.tmpl)[0];
-    this.fillView(el);
-    return el.outerHTML;
-  }
-  fill$View($view) {
-    $view.each(function(i, el) {
-      this.fillView(el);
-    });
-  }
-  copy() {
-    clipboard.writeText(event.target.innerHTML);
-  }
   matches(name /* must be all lowercase */) {
     return this.name.indexOf(name) !== -1;
   }
