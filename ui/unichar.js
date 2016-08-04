@@ -11,7 +11,7 @@ class UniChar {
     return `“${this.char}”: ${this.name} (${this.prettyCode})`;
   }
   get prettyCode() {
-    var code = this.code.toString(16);
+    var code = this.code.toString(16).toUpperCase();
     while (code.length < 4) {
       code = "0" + code;
     }
