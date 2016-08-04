@@ -20,16 +20,16 @@ window.VirtualScroll = class VirtualScroll extends React.Component {
     super(...args);
     this.state = {scrollPos: 0};
     this._onWheel = this._onWheel.bind(this);
-    this._cache = LRU({
-      max: 500,
-      stale: true,
-      maxAge: 500, // ms
-    });
   }
   componentWillMount() {
     this._plum = setInterval(() => {
       this._cache.prune();
     }, 1000);
+    this._cache = LRU({
+      max: 500,
+      stale: true,
+      maxAge: this.props.cache, // ms
+    });
   }
   componentWillUnmount() {
     this._cache.reset();
@@ -109,6 +109,7 @@ VirtualScroll.propTypes = {
   topInset: React.PropTypes.number,
   margin: React.PropTypes.number,
   renderer: React.PropTypes.func.isRequired, // (index:React.PropTypes.number) => React.PropTypes.element
+  cache: React.PropTypes.number,
 };
 VirtualScroll.defaultProps = {
   acceleration: 0.35,
@@ -117,4 +118,5 @@ VirtualScroll.defaultProps = {
   topInset: 0,
   margin: 5,
   // renderer: Error,
+  cache: 5000,
 };
