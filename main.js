@@ -21,8 +21,8 @@ mb.on('ready', () => {
     if (mb.window.isVisible()) {
       mb.hideWindow();
     } else {
+      mb.window.webContents.executeJavaScript(`$('.search').focus().val('').trigger('keydown')`);
       mb.showWindow();
-      mb.window.webContents.executeJavaScript(`$('.search').focus();`);
     }
   };
   globalShortcut.register('Ctrl+Shift+U', show);
