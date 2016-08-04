@@ -192,7 +192,7 @@ main {
       width: 100vw;
       background: $header-background;
       border-bottom: 1px solid #CCC;
-      height: 10vh;
+      height: 10vw;
       display: block;
       position: fixed;
       z-index: -1;
@@ -200,7 +200,6 @@ main {
     }
     &::after {
       @include header-shadow;
-      margin-top: -2px;
     }
   }
   .item {
