@@ -6,9 +6,9 @@ var {filter} = require('fuzzaldrin-plus');
 let _listener = null;
 const HEX_RE = /^\s*(?:U?[+-]?|0x|\+)?([0-9A-F]+)\s*$/i;
 
-$('.search').on('keydown keyup', ({which, target}) => {
-  if (event.which !== 13) return; // enter
-  var val = target.value.toLowerCase();
+$('.search').on('keydown keyup', ({which}) => {
+  if (which !== 13 && which) return; // enter
+  var val = $('.search').val().toLowerCase();
   if (val.length) {
     let _filtered = filter(UNICODE_DATA, val, {key: 'name'});
     if (_listener) {
