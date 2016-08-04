@@ -30,7 +30,7 @@ class SearchResult extends CharComponent {
       <span className="char">{this.char.char || nbsp}</span>
       <span className="code">{this.char.prettyCode}</span>
       <span className="name">{this.char.name}</span>
-      <button className="btn btn-sm" onClick={this.char.copy}>Copy</button>
+      <button className="btn btn-sm" onClick={this.char.copy.bind(this.char)}>Copy</button>
     </div>)
     // jshint ignore:end
   }

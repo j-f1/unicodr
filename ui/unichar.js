@@ -17,5 +17,8 @@ class UniChar {
     }
     return "U+" + code;
   }
+  copy() {
+    clipboard.writeText(this.char);
+  }
 }
 module.exports = UniChar;
