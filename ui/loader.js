@@ -38,3 +38,8 @@ loadUnicodeData.then(data => {
   }, 100);
   $('.loader').remove();
 }, throwOnFail);
+
+loadUnicodeData.catch(err => {
+  let html = $('<div><h1>Error loading the characters</h1><h2>Copy the below and tell the developer.</h2></div>').append($('<pre>').text(err));
+  $('body').empty().append(html);
+});
