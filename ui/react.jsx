@@ -45,7 +45,7 @@ class GridItem extends CharComponent {
   render() {
     // jshint ignore:start
     return (<span className="item">
-        <span className="char" onClick={this.char.copy}>{this.char.char}</span>
+        <span className="char" onClick={this.char.copy.bind(this.char)}>{this.char.char}</span>
         <span className="name">{this.char.name}</span>
         <span className="code">{this.char.prettyCode}</span>
         <span className="note">Click to copy</span>
