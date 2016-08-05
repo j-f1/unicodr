@@ -32,7 +32,7 @@ mb.on('ready', () => {
       mb.window.webContents.send('UNICODE_DATA', data);
     }, err => {
       console.log(err);
-      mb.window.webContents.send('UNICODE_DATA.err', err);
+      mb.window.webContents.send('UNICODE_DATA.err', require('util').inspect(err, { depth: null }));
     });
   });
 });
