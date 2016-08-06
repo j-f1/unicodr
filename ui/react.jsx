@@ -2,6 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 const {clipboard} = require('electron');
 const nbsp = String.fromCharCode(0xA0);
+var $ = require('jquery');
 
 // ABC //
 
@@ -93,7 +94,7 @@ class MainGrid extends GridComponent {
 class SearchResult extends CharComponent {
   render() {
     // jshint ignore:start
-    return (<div className="item">
+    return (<div className={"item " + (this.props.className || "")}>
       <span className="char">{this.char.char || nbsp}</span>
       <span className="code">{this.char.prettyCode}</span>
       <span className="name">{this.char.name}</span>
@@ -104,24 +105,65 @@ class SearchResult extends CharComponent {
 }
 
 class SearchResults extends GridComponent {
-  _getCell({index}) {
+  constructor(...args) {
+    super(...args);
+    this.state = {selected: -1};
+  }
+  activateSelected() {
+    if (this.state.selected === -1) {
+      this.props.exactMatch.copy();
+    } else {
+      this.props.chars[this.state.selected].copy();
+    }
+  }
+  _getCell(i) {
     // jshint ignore:start
-    return this._fromCache(index, () => <SearchResult char={this.props.chars[index]} />);
+    return <SearchResult className={i===this.state.selected && "selected"} char={this.props.chars[i]} />
     // jshint ignore:end
   }
   render() {
     // jshint ignore:start
     return (<div>
-      {this.props.exactMatch && <div className="exact-match"><SearchResult char={this.props.exactMatch} /></div>}
+      {this.props.exactMatch && <div className="exact-match"><SearchResult char={this.props.exactMatch} className={this.state.selected === -1 && "selected"} /></div>}
       <VirtualScroll
-        ref={c=>this.scroller=c}
+        ref={c=>{
+          if(!c) debugger;
+          this.scroller=c
+        }.bind(this)}
         count={this.props.chars.length}
         rowHeight={window.innerWidth / 10}
-        renderer={(i) => <SearchResult char={this.props.chars[i]} />}
+        renderer={this._getCell.bind(this)}
         {...this.props}
       />
     </div>)
     // jshint ignore:end
+  }
+  componentWillMount() {
+    $('body').on('keydown', this._cursor.bind(this));
+  }
+  componentWillUnmount() {
+    $('body').off('keydown', this._cursor.bind(this));
+  }
+  _cursor({which}) {
+    this.scroller.reloadRow(this.state.selected);
+    let selected = this.state.selected;
+    if (which === 38) { // up
+      selected--;
+    } else if (which === 40) { // down
+      selected++;
+    }
+    if (which === 38 || which == 40) {
+      if (selected <= -1) {
+        selected = -1;
+      }
+      if (selected >= this.props.chars.length) {
+        selected = this.props.chars.length - 1;
+      }
+      this.setState({selected});
+      this.scroller.reloadRow(selected);
+      this.forceUpdate();
+      event.preventDefault();
+    }
   }
 }
 

@@ -200,7 +200,7 @@ header {
       &:not(:first-child) {
         margin-left: 0.25em;
       }
-      &:not(:last-child) {
+      &/*:not(:last-child)*/ {
         margin-right: 0.25em;
       }
     }
@@ -223,4 +223,9 @@ header {
       flex: 1;
     }
   }
+}
+
+.selected {
+  background: transparentize(#CCC, 0.5);
+  border-radius: .5em;
 }
