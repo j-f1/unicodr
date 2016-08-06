@@ -11,6 +11,7 @@ $('.search').on('keydown', ({which}) => {
   if (which !== 13 && which) return; // enter
   var val = $('.search').val().toLowerCase();
   if (val.length) {
+    $('.sort').addClass('active');
     let _filtered = filter(UNICODE_DATA, val, {key: 'name'});
     if (_listener) {
       window.removeEventListener('resize', _listener);
@@ -52,6 +53,7 @@ $('.search').on('keydown', ({which}) => {
     $('.search-results').fadeIn();
   } else {
     $('header .results').text('');
+    $('.sort').removeClass('active');
     window.removeEventListener('resize', _listener);
     _listener = null;
     unmountComponentAtNode($('.search-results')[0]);
