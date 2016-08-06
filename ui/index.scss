@@ -51,33 +51,35 @@ body {
 }
 
 html:not(.fullscreen) header {
-  padding-left: calc(1em + 60px);
-}
-html.fullscreen {
-  .search {
-    width: 100%;
+  .window-controls {
+    width: 60px;
+  }
+  .handle {
+    width: 5em;
   }
 }
+
 header {
   z-index: 1;
   height: $header-height;
   border-bottom: 1px solid $header-border;
-  &::before {
+
+  &::after {
     @include header-shadow;
     margin-top: 2.5em;
   }
+
   background: $header-background;
   position: fixed;
+  display: flex;
+  align-items: center;
   top: 0;
   width: 100vw;
-  padding-left: 1em;
+  padding: 0 1rem;
   box-sizing: border-box;
 
   .search {
-    position: absolute;
-    top: 0;
-    width: calc(100% - 5em);
-    height: 100%;
+    flex: 1;
     font-size: 1.5em;
 
     background: transparent;
@@ -89,12 +91,11 @@ header {
       outline: none;
     }
   }
-  &::after {
-    content: attr(data-meta);
-    float: right;
+  .results:not(:empty) {
+    margin-left: 1rem;
     font-size: 1.25em;
     opacity: 0.25;
-    margin-top: 0.4em;
+    -webkit-user-select: none;
     pointer-events: none;
   }
 }

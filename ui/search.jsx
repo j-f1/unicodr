@@ -27,7 +27,7 @@ $('.search').on('keydown', ({which}) => {
       exactMatch = UNICODE_DATA.filter(char => char.char === chr)[0];
     }
     let matches = (_filtered.length + (+ !!exactMatch));
-    $('header').attr('data-meta', matches.toLocaleString() + ' result' + (matches == 1 ? '' : 's'));
+    $('header .results').text(matches.toLocaleString() + ' result' + (matches == 1 ? '' : 's'));
     let run = () => {
       return render(React.createElement(SearchResults, {
         chars: _filtered,
@@ -51,7 +51,7 @@ $('.search').on('keydown', ({which}) => {
     $('main').fadeOut();
     $('.search-results').fadeIn();
   } else {
-    $('header').attr('data-meta', null);
+    $('header .results').text('');
     window.removeEventListener('resize', _listener);
     _listener = null;
     unmountComponentAtNode($('.search-results')[0]);
