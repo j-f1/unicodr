@@ -26,6 +26,8 @@ $('.search').on('keydown', ({which}) => {
       let chr = val.normalize('NFC')[Symbol.iterator]().next().value;
       exactMatch = UNICODE_DATA.filter(char => char.char === chr)[0];
     }
+    let matches = (_filtered.length + (+ !!exactMatch));
+    $('header').attr('data-meta', matches.toLocaleString() + ' result' + (matches == 1 ? '' : 's'));
     let run = () => {
       return render(React.createElement(SearchResults, {
         chars: _filtered,
@@ -41,6 +43,7 @@ $('.search').on('keydown', ({which}) => {
     } else {
       el.setState({selected: -1});
     }
+    el.forceUpdate();
     old = val;
     _listener = run;
     window.addEventListener('resize', run);
@@ -48,6 +51,7 @@ $('.search').on('keydown', ({which}) => {
     $('main').fadeOut();
     $('.search-results').fadeIn();
   } else {
+    $('header').attr('data-meta', null);
     window.removeEventListener('resize', _listener);
     _listener = null;
     unmountComponentAtNode($('.search-results')[0]);

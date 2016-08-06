@@ -98,17 +98,21 @@ class SearchResult extends CharComponent {
   }
   render() {
     // jshint ignore:start
-    return (<div className={"item " + (this.props.className || "")}>
+    return (<div className={"item " + (this.props.className || "")} onMouseOver={this._mouseEnter.bind(this)}>
       <span className="char">{this.char.char || nbsp}</span>
       <span className="code">{this.char.prettyCode}</span>
       <span className="name">{this.char.name}</span>
       { /*<button className="btn btn-sm in-place" onClick={this._inPlace.bind(this)}><span /></button>*/ }
       <button className="btn btn-sm" onClick={e => {
+        debugger;
         this.char.copy();
         e.preventDefault();
-      }}>Copy</button>
+      }.bind(this)}>Copy</button>
     </div>)
     // jshint ignore:end
+  }
+  _mouseEnter() {
+    this.props.parent.selectRow(this.props.index);
   }
 }
 
@@ -116,6 +120,12 @@ class SearchResults extends GridComponent {
   constructor(...args) {
     super(...args);
     this.state = {selected: -1};
+  }
+  selectRow(selected) {
+    this.scroller.reloadRow(this.state.selected);
+    this.setState({selected});
+    this.scroller.reloadRow(selected);
+    this.forceUpdate();
   }
   activateSelected() {
     if (this.state.selected === -1) {
@@ -126,16 +136,28 @@ class SearchResults extends GridComponent {
   }
   _getCell(i) {
     // jshint ignore:start
-    return <SearchResult className={i===this.state.selected && "selected"} char={this.props.chars[i]} />
+    return <SearchResult
+      parent={this}
+      index={i}
+      className={i===this.state.selected && "selected"}
+      char={this.props.chars[i]}
+    />
     // jshint ignore:end
   }
   render() {
     // jshint ignore:start
     return (<div>
-      {this.props.exactMatch && <div className="exact-match"><SearchResult char={this.props.exactMatch} className={this.state.selected === -1 && "selected"} /></div>}
+      {this.props.exactMatch && <div className="exact-match">
+        <SearchResult
+          parent={this}
+          index={-1}
+          char={this.props.exactMatch}
+          className={this.state.selected === -1 && "selected"}
+        />
+        </div>}
       <VirtualScroll
         ref={c=>{
-          if(!c) debugger;
+          // if(!c) debugger;
           this.scroller=c
         }.bind(this)}
         count={this.props.chars.length}
@@ -147,13 +169,12 @@ class SearchResults extends GridComponent {
     // jshint ignore:end
   }
   componentWillMount() {
-    $('body').on('keydown', this._cursor.bind(this));
+    $('body').on('keydown', this._keyDown.bind(this));
   }
   componentWillUnmount() {
-    $('body').off('keydown', this._cursor.bind(this));
+    $('body').off('keydown', this._keyDown.bind(this));
   }
-  _cursor({which}) {
-    this.scroller.reloadRow(this.state.selected);
+  _keyDown({which}) {
     let selected = this.state.selected;
     if (which === 38) { // up
       selected--;
@@ -167,11 +188,18 @@ class SearchResults extends GridComponent {
       if (selected >= this.props.chars.length) {
         selected = this.props.chars.length - 1;
       }
-      this.setState({selected});
-      this.scroller.reloadRow(selected);
-      this.forceUpdate();
+      this.scroller.scrollTo(this._calculateScrollPos(selected));
+      this.selectRow(selected);
       event.preventDefault();
     }
+  }
+  _calculateScrollPos(selected) {
+    let pos = selected * this.scroller.props.rowHeight;
+    pos -= (window.innerHeight - this.scroller.props.rowHeight) / 2;
+    if (pos < 0) {
+      pos = 0;
+    }
+    return pos;
   }
 }
 

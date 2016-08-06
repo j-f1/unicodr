@@ -62,7 +62,7 @@ header {
   z-index: 1;
   height: $header-height;
   border-bottom: 1px solid $header-border;
-  &::after {
+  &::before {
     @include header-shadow;
     margin-top: 2.5em;
   }
@@ -88,6 +88,14 @@ header {
     &:focus {
       outline: none;
     }
+  }
+  &::after {
+    content: attr(data-meta);
+    float: right;
+    font-size: 1.25em;
+    opacity: 0.25;
+    margin-top: 0.4em;
+    pointer-events: none;
   }
 }
 
