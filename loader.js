@@ -6,22 +6,17 @@ const zlib = require('zlib');
 const CACHE_PATH = require('path').join(require('electron').app.getPath('userData'), 'cache.dat');
 
 let l = v => console.log('loader: ' + v);
-// l = ()=>0; // Release
+if (process.env.NODE_ENV === 'production') {
+  l = ()=>0; // Release
+}
 
 let load = (resolve, reject) => {
+  l('reading');
   try {
-    let fileStream = fs.createReadStream(CACHE_PATH);
-    let decoder = new CBOR.Decoder();
-    decoder.on('data', ({value}) => {
-      l('CBOR data');
-      resolve(value.map(data => data.value));
-      l('resolved');
-    });
-    decoder.on('error', reject);
-    l('CBOR decoder created');
-
-    fileStream.pipe(decoder);
-    l('data piped');
+    fs.readFile(CACHE_PATH, {encoding: 'utf-8'}).then(JSON.parse).then(val => {
+      l('resolving');
+      resolve(val);
+    }).catch(reject);
   } catch(e) {
     reject(e);
   }
@@ -42,14 +37,19 @@ module.exports = new Promise(function(resolve, reject) {
         gzip.on('error', reject);
         l('gzip stream created');
 
-        let writeStream = fs.createWriteStream(CACHE_PATH);
-        writeStream.on('error', reject);
-        writeStream.on('finish', () => {
-          load(resolve, reject);
+        let decoder = new CBOR.Decoder();
+        decoder.on('data', ({value}) => {
+          l('CBOR data');
+          value = value.map(data => data.value);
+          fs.writeFile(CACHE_PATH, JSON.stringify(value)).then(() => {
+            l('cached');
+            load(resolve, reject);
+          }, reject);
         });
-        l('write stream created');
+        decoder.on('error', reject);
+        l('CBOR decoder created');
 
-        readStream.pipe(gzip).pipe(writeStream);
+        readStream.pipe(gzip).pipe(decoder);
         l('piped.');
       } catch (e) {
         reject(e);
