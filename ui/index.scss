@@ -229,3 +229,54 @@ header {
   background: transparentize(#CCC, 0.5);
   border-radius: .5em;
 }
+
+$arrow-size: 0.5em;
+$arrow-length: 1.25em;
+$in-place-selector: ".btn.in-place";
+
+#{$in-place-selector} {
+  font-size: 1em;
+  display: inline-flex;
+  padding: 0 .125em .125em;
+  align-items: center;
+  width: 3em;
+  height: 3em;
+  span {
+    margin: auto;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    border: 0.25em solid currentColor;
+    &::before {
+      content: '';
+      width: 0;
+      height: 0;
+      border-bottom: $arrow-size solid currentColor;
+      border-right: $arrow-size solid transparent;
+      position: relative;
+      bottom: 1em;
+      left: .1em;
+    }
+    &::after {
+      content: '';
+      width: $arrow-size / 2;
+      height: $arrow-length;
+      display: inline-block;
+      position: absolute;
+      background: currentColor;
+      transform: rotate(45deg) translate3d(-0.5em, 0.775em - $arrow-length, 0);
+      border-left:  0.2em solid;
+      border-right: 0.2em solid;
+    }
+  }
+}
+#{$in-place-selector} span::after {
+  border-color: #999;
+}
+#{$in-place-selector}:hover span::after {
+  border-color: #888;
+}
+#{$in-place-selector}:active span::after,
+#{$in-place-selector}:focus span::after{
+  border-color: #777;
+}

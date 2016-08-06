@@ -92,13 +92,21 @@ class MainGrid extends GridComponent {
 // SEARCH RESULTS //
 
 class SearchResult extends CharComponent {
+  _inPlace(event) {
+    // TODO
+    event.preventDefault();
+  }
   render() {
     // jshint ignore:start
     return (<div className={"item " + (this.props.className || "")}>
       <span className="char">{this.char.char || nbsp}</span>
       <span className="code">{this.char.prettyCode}</span>
       <span className="name">{this.char.name}</span>
-      <button className="btn btn-sm" onClick={this.char.copy.bind(this.char)}>Copy</button>
+      { /*<button className="btn btn-sm in-place" onClick={this._inPlace.bind(this)}><span /></button>*/ }
+      <button className="btn btn-sm" onClick={e => {
+        this.char.copy();
+        e.preventDefault();
+      }}>Copy</button>
     </div>)
     // jshint ignore:end
   }
