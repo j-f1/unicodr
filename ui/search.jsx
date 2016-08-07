@@ -1,14 +1,13 @@
 var $ = require('jquery');
 var React = require('react');
 var {render, unmountComponentAtNode} = require('react-dom');
-var {filter} = require('fuzzaldrin-plus');
 var punycode = require('punycode');
 
 let _listener = null;
 const HEX_RE = /^\s*(?:U?[+-]?|0x|\+)?([0-9A-F]+)\s*$/i;
-let old = "";
+let old = '';
 
-function search(query) {
+function filter(query) {
   let exactMatch;
   let hex = HEX_RE.exec(query);
   if (hex !== null) {
@@ -20,7 +19,7 @@ function search(query) {
     exactMatch = UNICODE_DATA.filter(char => char.char === chr)[0];
   }
 
-  return {filtered: filter(UNICODE_DATA, query, {key: 'name'}), exactMatch};
+  return {filtered: require('fuzzaldrin-plus').filter(UNICODE_DATA, query, {key: 'name'}), exactMatch};
 }
 
 function createView({filtered: chars, exactMatch}) {
@@ -48,6 +47,39 @@ function resultCount({filtered, exactMatch}) {
   return filtered.length;
 }
 
+function search(query) {
+  let results = filter(query);
+  results.filtered = currentSorter(results.filtered);
+
+  let matches = resultCount(results);
+  $('header .results').text(matches.toLocaleString() + ' result' + (matches == 1 ? '' : 's'));
+
+  let el = createView(results);
+  el.scroller.scrollTo(0);
+  if (query === old) {
+    el.activateSelected();
+  } else {
+    el.scroller.reloadData();
+    el.setState({selected: -1});
+  }
+  el.forceUpdate();
+  old = query;
+}
+
+const SORTERS = {
+  relevance: x => x,
+  codepoint: results => {
+    return [...results].sort((a, b) => a.code - b.code); // sort is in-place, so we have to make a copy.
+  },
+};
+let currentSorter = SORTERS.relevance;
+
+$('[name="sort"]').on('change', ({target: {value}}) => {
+  currentSorter = SORTERS[value];
+  old = '';
+  search($('.search').val().toLowerCase());
+});
+
 $('.search').on('keydown', ({which}) => {
   if (which === 27) {
     // escape (or ␛ or ⎋ :)
@@ -57,21 +89,7 @@ $('.search').on('keydown', ({which}) => {
   if (query.length) {
     $('.sort').addClass('active');
 
-    let results = search(query);
-
-    let matches = resultCount(results);
-    $('header .results').text(matches.toLocaleString() + ' result' + (matches == 1 ? '' : 's'));
-
-    let el = createView(results);
-    el.scroller.scrollTo(0);
-    if (query === old) {
-      el.activateSelected();
-    } else {
-      el.scroller.reloadData();
-      el.setState({selected: -1});
-    }
-    el.forceUpdate();
-    old = query;
+    search(query);
 
     window.switchToSearch();
   } else {
