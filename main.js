@@ -1,5 +1,6 @@
-const {app, globalShortcut} = require('electron');
+if (process.argv[2] !== '--debug') process.env.NODE_ENV = 'production';
 
+const {app, globalShortcut} = require('electron');
 
 // const {"default": installExtension, REACT_DEVELOPER_TOOLS} = require('electron-devtools-installer');
 // console.log(installExtension);
@@ -27,6 +28,7 @@ mb.on('ready', () => {
   };
   globalShortcut.register('Ctrl+Shift+U', show);
   globalShortcut.register('Cmd+Shift+U', show);
+  if (process.env.NODE_ENV !== 'production') mb.window.webContents.openDevTools();
   mb.window.webContents.on('did-finish-load', () => {
     loadUnicodeData.then(data => {
       mb.window.webContents.send('UNICODE_DATA', data);
