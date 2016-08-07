@@ -15,6 +15,17 @@ window.VirtualScroll = class VirtualScroll extends React.Component {
   scrollTo(scrollPos) {
     this.setState({scrollPos});
   }
+  scrollToRow(row) {
+    let pos = row * this.props.rowHeight;
+    let max = (this.props.count * this.props.rowHeight) - window.innerHeight;
+    pos -= (window.innerHeight - this.props.rowHeight) / 2;
+    if (pos < 0) {
+      pos = 0;
+    } else if (pos > max) {
+      pos = max;
+    }
+    this.scrollTo(pos);
+  }
   // PRIVATE & REACT API //
   constructor(...args) {
     super(...args);

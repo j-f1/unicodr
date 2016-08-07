@@ -67,7 +67,7 @@
     loadUnicodeData.then(chars => {
       // jshint ignore:start
       let run = () => {
-        render(<MainGrid
+        window.mainGrid = render(<MainGrid
           cols={5}
           chars={chars}
           containerId='main'

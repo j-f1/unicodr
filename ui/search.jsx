@@ -73,19 +73,27 @@ $('.search').on('keydown', ({which}) => {
     el.forceUpdate();
     old = query;
 
-    $('main').fadeOut();
-    $('.search-results').fadeIn();
+    window.switchToSearch();
   } else {
-    $('.sort').removeClass('active');
-
-    $('header .results').text('');
-
-    window.removeEventListener('resize', _listener);
-    _listener = null;
-
-    unmountComponentAtNode($('.search-results')[0]);
-
-    $('main').fadeIn();
-    $('.search-results').fadeOut();
+    window.switchToMain();
   }
 });
+
+window.switchToMain = function() {
+  old = '';
+  $('.search').val('');
+  $('.sort').removeClass('active');
+  $('header .results').text('');
+  window.removeEventListener('resize', _listener);
+  _listener = null;
+
+  unmountComponentAtNode($('.search-results')[0]);
+
+
+  $('main').fadeIn();
+  $('.search-results').fadeOut();
+};
+window.switchToSearch = function() {
+  $('main').fadeOut();
+  $('.search-results').fadeIn();
+};

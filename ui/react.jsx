@@ -79,6 +79,7 @@ class MainGrid extends GridComponent {
   render() {
     // jshint ignore:start
     return (<VirtualScroll
+      ref={x=> this.scroller=x}
       rowHeight={window.innerWidth/5}
       count={Math.ceil(this.props.chars.length/this.props.cols)}
       topInset={2.5 * 16}
@@ -93,8 +94,11 @@ class MainGrid extends GridComponent {
 
 class SearchResult extends CharComponent {
   _inPlace(event) {
-    // TODO
+    let idx = UNICODE_DATA.indexOf(this.char);
+    let row = Math.floor(idx / window.mainGrid.props.cols);
+    window.mainGrid.scroller.scrollToRow(row);
     event.preventDefault();
+    window.switchToMain();
   }
   render() {
     // jshint ignore:start
@@ -102,7 +106,7 @@ class SearchResult extends CharComponent {
       <span className="char">{this.char.char || nbsp}</span>
       <span className="code">{this.char.prettyCode}</span>
       <span className="name">{this.char.name}</span>
-      { /*<button className="btn btn-sm in-place" onClick={this._inPlace.bind(this)}><span /></button>*/ }
+      <button className="btn btn-sm in-place" onClick={this._inPlace.bind(this)}><span /></button>
       <button className="btn btn-sm" onClick={e => {
         debugger;
         this.char.copy();
@@ -188,18 +192,10 @@ class SearchResults extends GridComponent {
       if (selected >= this.props.chars.length) {
         selected = this.props.chars.length - 1;
       }
-      this.scroller.scrollTo(this._calculateScrollPos(selected));
+      this.scroller.scrollToRow(selected);
       this.selectRow(selected);
       event.preventDefault();
     }
-  }
-  _calculateScrollPos(selected) {
-    let pos = selected * this.scroller.props.rowHeight;
-    pos -= (window.innerHeight - this.scroller.props.rowHeight) / 2;
-    if (pos < 0) {
-      pos = 0;
-    }
-    return pos;
   }
 }
 
