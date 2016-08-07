@@ -124,6 +124,7 @@ class SearchResults extends GridComponent {
   constructor(...args) {
     super(...args);
     this.state = {selected: -1};
+    this._keyDown = this._keyDown.bind(this);
   }
   selectRow(selected) {
     this.scroller.reloadRow(this.state.selected);
@@ -161,7 +162,6 @@ class SearchResults extends GridComponent {
         </div>}
       <VirtualScroll
         ref={c=>{
-          // if(!c) debugger;
           this.scroller=c
         }.bind(this)}
         count={this.props.chars.length}
@@ -173,10 +173,10 @@ class SearchResults extends GridComponent {
     // jshint ignore:end
   }
   componentWillMount() {
-    $('body').on('keydown', this._keyDown.bind(this));
+    $('body').on('keydown', this._keyDown);
   }
   componentWillUnmount() {
-    $('body').off('keydown', this._keyDown.bind(this));
+    $('body').off('keydown', this._keyDown);
   }
   _keyDown({which}) {
     let selected = this.state.selected;
