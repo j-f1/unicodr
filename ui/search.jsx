@@ -137,7 +137,7 @@ $('.search').on('keydown', ({which}) => {
 
 window.switchToMain = function() {
   $('.search').val('');
-  $('.sort').removeClass('active');
+  $('.sort').removeClass('active').prop('checked', false);
   $('header .results').text('');
 
   seeker.reset();
