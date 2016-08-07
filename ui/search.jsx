@@ -23,14 +23,14 @@ function search(query) {
   return {filtered: filter(UNICODE_DATA, query, {key: 'name'}), exactMatch};
 }
 
-function createView({results, exactMatch}) {
+function createView({filtered: chars, exactMatch}) {
   if (_listener) {
     window.removeEventListener('resize', _listener);
     _listener = null;
   }
   let run = () => {
     return render(React.createElement(SearchResults, {
-      chars: results,
+      chars,
       topInset: 2.5 * 16 + (!!exactMatch && window.innerWidth/10),
       scrollTo: 0,
       exactMatch,
@@ -57,12 +57,9 @@ $('.search').on('keydown', ({which}) => {
   if (query.length) {
     $('.sort').addClass('active');
 
-    // jshint -W120
-    let results;
-    let {filtered, exactMatch} = results = search(query);
-    // jshint +W120
+    let results = search(query);
 
-    let resultCount = resultCount(results);
+    let matches = resultCount(results);
     $('header .results').text(matches.toLocaleString() + ' result' + (matches == 1 ? '' : 's'));
 
     let el = createView(results);
@@ -70,6 +67,7 @@ $('.search').on('keydown', ({which}) => {
     if (query === old) {
       el.activateSelected();
     } else {
+      el.scroller.reloadData();
       el.setState({selected: -1});
     }
     el.forceUpdate();
