@@ -2,15 +2,26 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var LRU = require('lru-cache');
 
+let S = {
+  cache: Symbol('cache'),
+  onWheel: Symbol('on wheel'),
+  plum: Symbol('plum'),
+  getComponent: Symbol('get component'),
+  styleForRow: Symbol('style for row'),
+  visibility: Symbol('visibility'),
+  mainStyle: Symbol('main style'),
+  visibleStyledRows: Symbol('visible styled rows'),
+};
+
 window.VirtualScroll = class VirtualScroll extends React.Component {
   // PUBLIC API //
   reloadRow(i) {
     // Call this to reload row `i` (the next time the component renders it).
-    this._cache.del(i);
+    this[S.cache].del(i);
   }
   reloadData() {
     // call this to reload all rows.
-    this._cache.reset();
+    this[S.cache].reset();
   }
   scrollTo(scrollPos) {
     this.setState({scrollPos});
@@ -30,25 +41,25 @@ window.VirtualScroll = class VirtualScroll extends React.Component {
   constructor(...args) {
     super(...args);
     this.state = {scrollPos: 0};
-    this._onWheel = this._onWheel.bind(this);
+    this[S.onWheel] = this[S.onWheel].bind(this);
   }
   componentWillMount() {
-    this._plum = setInterval(() => {
-      this._cache.prune();
+    this[S.plum] = setInterval(() => {
+      this[S.cache].prune();
     }, 1000);
-    this._cache = LRU({
+    this[S.cache] = LRU({
       max: 500,
       stale: true,
       maxAge: this.props.cache, // ms
     });
   }
   componentWillUnmount() {
-    this._cache.reset();
-    clearInterval(this._plum);
-    this._plum = null;
+    this[S.cache].reset();
+    clearInterval(this[S.plum]);
+    this[S.plum] = null;
   }
 
-  _onWheel(event) {
+  [S.onWheel](event) {
     let newScroll = this.state.scrollPos + event.deltaY * this.props.acceleration;
     if (newScroll < 0) {
       newScroll = 0;
@@ -60,13 +71,13 @@ window.VirtualScroll = class VirtualScroll extends React.Component {
     this.setState({scrollPos: newScroll});
   }
 
-  _getComponent(i) {
-    if (!this._cache.has(i)) {
-      this._cache.set(i, this.props.renderer(i));
+  [S.getComponent](i) {
+    if (!this[S.cache].has(i)) {
+      this[S.cache].set(i, this.props.renderer(i));
     }
-    return this._cache.get(i);
+    return this[S.cache].get(i);
   }
-  _styleForRow(i) {
+  [S.styleForRow](i) {
     return {
       width: '100%',
       position: 'absolute',
@@ -74,7 +85,7 @@ window.VirtualScroll = class VirtualScroll extends React.Component {
     };
   }
 
-  get _visibility() {
+  get [S.visibility]() {
     let startIdx = Math.floor(this.state.scrollPos / this.props.rowHeight) - this.props.margin;
     let count = Math.ceil(window.innerHeight / this.props.rowHeight) + (this.props.margin * 2);
     let endIdx = startIdx + count;
@@ -86,20 +97,20 @@ window.VirtualScroll = class VirtualScroll extends React.Component {
     }
     return {startIdx, endIdx};
   }
-  get _mainStyle() {
+  get [S.mainStyle]() {
     return {
       position: 'relative',
       width: '100%',
       height: '100%'
     };
   }
-  get _visibleStyledRows() {
-    let {startIdx, endIdx} = this._visibility;
+  get [S.visibleStyledRows]() {
+    let {startIdx, endIdx} = this[S.visibility];
     let rows = [];
     for (let i = startIdx; i <= endIdx; i++) {
-      let row = this._getComponent(i);
+      let row = this[S.getComponent](i);
       // jshint ignore:start
-      rows.push(<div style={this._styleForRow(i)} key={i}>{row}</div>)
+      rows.push(<div style={this[S.styleForRow](i)} key={i}>{row}</div>)
       // jshint ignore:end
     }
     return rows;
@@ -108,7 +119,7 @@ window.VirtualScroll = class VirtualScroll extends React.Component {
 
   render() {
     // jshint ignore:start
-    return (<div style={this._mainStyle} onWheel={this._onWheel}>{this._visibleStyledRows}</div>)
+    return (<div style={this[S.mainStyle]} onWheel={this[S.onWheel]}>{this[S.visibleStyledRows]}</div>)
     // jshint ignore:end
   }
 };
