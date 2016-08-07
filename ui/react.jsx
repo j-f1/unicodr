@@ -108,7 +108,6 @@ class SearchResult extends CharComponent {
       <span className="name">{this.char.name}</span>
       <button className="btn btn-sm in-place" onClick={this._inPlace.bind(this)}><span /></button>
       <button className="btn btn-sm" onClick={e => {
-        debugger;
         this.char.copy();
         e.preventDefault();
       }.bind(this)}>Copy</button>
