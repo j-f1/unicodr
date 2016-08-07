@@ -6,24 +6,26 @@ var fuzzaldrin = require('fuzzaldrin-plus');
 var {ucs2: {decode}} = require('punycode');
 
 {
-  let HEX_RE         = Symbol('hex regex');
-  let listener       = Symbol('listener');
-  let old            = Symbol('old');
-  let $resultCount   = Symbol('$result count');
-  let $searchResults = Symbol('$search results');
-  let filter         = Symbol('filter');
-  let filtered       = Symbol('filtered');
-  let exactMatch     = Symbol('exact match');
-  let resultCount    = Symbol('result count');
-  let createView     = Symbol('create view');
+  let S = {
+    HEX_RE        : Symbol('hex regex'),
+    listener      : Symbol('listener'),
+    old           : Symbol('old'),
+    $resultCount  : Symbol('$result count'),
+    $searchResults: Symbol('$search results'),
+    filter        : Symbol('filter'),
+    filtered      : Symbol('filtered'),
+    exactMatch    : Symbol('exact match'),
+    resultCount   : Symbol('result count'),
+    createView    : Symbol('create view'),
+  };
 
   var Seeker = class Seeker {
     constructor({$resultCount: rc, $results: r}) {
-      this[HEX_RE] = /^\s*(?:U?[+-]?|0x|\+)?([0-9A-F]+)\s*$/i;
-      this[listener] = null;
-      this[old] = '';
-      this[$resultCount] = rc;
-      this[$searchResults] = r;
+      this[S.HEX_RE] = /^\s*(?:U?[+-]?|0x|\+)?([0-9A-F]+)\s*$/i;
+      this[S.listener] = null;
+      this[S.old] = '';
+      this[S.$resultCount] = rc;
+      this[S.$searchResults] = r;
 
       this.SORTERS = {
         relevance: x => x,
@@ -34,25 +36,25 @@ var {ucs2: {decode}} = require('punycode');
       this.currentSorter = this.SORTERS.relevance;
     }
     reset() {
-      this[old] = '';
-      window.removeEventListener('resize', this[listener]);
-      this[listener] = null;
+      this[S.old] = '';
+      window.removeEventListener('resize', this[S.listener]);
+      this[S.listener] = null;
 
-      unmountComponentAtNode(this[$searchResults][0]);
+      unmountComponentAtNode(this[S.$searchResults][0]);
     }
     updateSort(name, query) {
       this.currentSorter = this.SORTERS[name];
-      this[old] = '';
+      this[S.old] = '';
       this.search(query);
     }
     search(query) {
-      let results = this[filter](query);
+      let results = this[S.filter](query);
 
-      let matches = this[resultCount];
-      this[$resultCount].text(matches.toLocaleString() + ' result' + (matches == 1 ? '' : 's'));
+      let matches = this[S.resultCount];
+      this[S.$resultCount].text(matches.toLocaleString() + ' result' + (matches == 1 ? '' : 's'));
 
-      let el = this[createView](results);
-      if (query === this[old]) {
+      let el = this[S.createView](results);
+      if (query === this[S.old]) {
         el.activateSelected();
       } else {
         el.scroller.reloadData();
@@ -60,13 +62,13 @@ var {ucs2: {decode}} = require('punycode');
         el.scroller.scrollTo(0);
       }
       el.forceUpdate();
-      this[old] = query;
+      this[S.old] = query;
     }
 
     // PRIVATE //
-    [filter](query) {
+    [S.filter](query) {
       let exactMatch;
-      let hex = this[HEX_RE].exec(query);
+      let hex = this[S.HEX_RE].exec(query);
       if (hex !== null) {
         let code = parseInt(hex[1], 16);
         exactMatch = UNICODE_DATA.filter(char => char.code === code)[0];
@@ -76,36 +78,36 @@ var {ucs2: {decode}} = require('punycode');
         exactMatch = UNICODE_DATA.filter(char => char.char === chr)[0];
       }
 
-      this[filtered] = this.currentSorter(
+      this[S.filtered] = this.currentSorter(
         fuzzaldrin.filter(UNICODE_DATA,
           query, {
             key: 'name'
           }
         )
       );
-      this[exactMatch] = exactMatch;
+      this[S.exactMatch] = exactMatch;
     }
-    [createView]() {
-      if (this[listener]) {
-        window.removeEventListener('resize', this[listener]);
-        this[listener] = null;
+    [S.createView]() {
+      if (this[S.listener]) {
+        window.removeEventListener('resize', this[S.listener]);
+        this[S.listener] = null;
       }
       let run = () => {
         return render(React.createElement(SearchResults, {
-          chars: this[filtered],
-          topInset: 2.5 * 16 + (!!this[exactMatch] && window.innerWidth/10),
-          exactMatch: this[exactMatch],
-        }), this[$searchResults][0]);
+          chars: this[S.filtered],
+          topInset: 2.5 * 16 + (!!this[S.exactMatch] && window.innerWidth/10),
+          exactMatch: this[S.exactMatch],
+        }), this[S.$searchResults][0]);
       };
-      this[listener] = run;
+      this[S.listener] = run;
       window.addEventListener('resize', run);
       return run();
     }
-    get [resultCount]() {
-      if (this[exactMatch]) {
-        return this[filtered].length + 1;
+    get [S.resultCount]() {
+      if (this[S.exactMatch]) {
+        return this[S.filtered].length + 1;
       }
-      return this[filtered].length;
+      return this[S.filtered].length;
     }
   };
 }
