@@ -20,8 +20,8 @@ You need:
   - `index.html`: the HTML file
   - `index.scss`: the stylesheet. Run `npm run watch` to compile to CSS on save.
   - `unichar.js`: the data model
-  - `virtual.jsx`: my React `<VirtualScroll />` component.
-  - `react.jsx`: the React components.
+  - `virtual.jsx`: my Ꝛeact `<VirtualScroll />` component.
+  - `react.jsx`: the Ꝛeact components.
   - `search.jsx`: the search library.
   - `loader.jsx`: re-wraps the main process promise.
 - `.jshintrc`: for [JSHint](http://jshint.com)
