@@ -2,82 +2,121 @@ var $ = require('jquery');
 var React = require('react');
 var {render, unmountComponentAtNode} = require('react-dom');
 var punycode = require('punycode');
+var fuzzaldrin = require('fuzzaldrin-plus');
+var {ucs2: {decode}} = require('punycode');
 
-let _listener = null;
-const HEX_RE = /^\s*(?:U?[+-]?|0x|\+)?([0-9A-F]+)\s*$/i;
-let old = '';
+{
+  let HEX_RE         = Symbol('hex regex');
+  let listener       = Symbol('listener');
+  let old            = Symbol('old');
+  let $resultCount   = Symbol('$result count');
+  let $searchResults = Symbol('$search results');
+  let filter         = Symbol('filter');
+  let filtered       = Symbol('filtered');
+  let exactMatch     = Symbol('exact match');
+  let resultCount    = Symbol('result count');
+  let createView     = Symbol('create view');
 
-function filter(query) {
-  let exactMatch;
-  let hex = HEX_RE.exec(query);
-  if (hex !== null) {
-    let code = parseInt(hex[1], 16);
-    exactMatch = UNICODE_DATA.filter(char => char.code === code)[0];
-  }
-  if (!exactMatch && require('punycode').ucs2.decode(query.normalize('NFC')).length === 1) {
-    let chr = query.normalize('NFC')[Symbol.iterator]().next().value;
-    exactMatch = UNICODE_DATA.filter(char => char.char === chr)[0];
-  }
+  var Seeker = class Seeker {
+    constructor({$resultCount: rc, $results: r}) {
+      this[HEX_RE] = /^\s*(?:U?[+-]?|0x|\+)?([0-9A-F]+)\s*$/i;
+      this[listener] = null;
+      this[old] = '';
+      this[$resultCount] = rc;
+      this[$searchResults] = r;
 
-  return {filtered: require('fuzzaldrin-plus').filter(UNICODE_DATA, query, {key: 'name'}), exactMatch};
-}
+      this.SORTERS = {
+        relevance: x => x,
+        codepoint: results => {
+          return [...results].sort((a, b) => a.code - b.code); // sort is in-place, so we have to make a copy.
+        },
+      };
+      this.currentSorter = this.SORTERS.relevance;
+    }
+    reset() {
+      this[old] = '';
+      window.removeEventListener('resize', this[listener]);
+      this[listener] = null;
 
-function createView({filtered: chars, exactMatch}) {
-  if (_listener) {
-    window.removeEventListener('resize', _listener);
-    _listener = null;
-  }
-  let run = () => {
-    return render(React.createElement(SearchResults, {
-      chars,
-      topInset: 2.5 * 16 + (!!exactMatch && window.innerWidth/10),
-      scrollTo: 0,
-      exactMatch,
-    }), $('.search-results')[0]);
+      unmountComponentAtNode(this[$searchResults][0]);
+    }
+    updateSort(name, query) {
+      this.currentSorter = this.SORTERS[name];
+      this[old] = '';
+      this.search(query);
+    }
+    search(query) {
+      let results = this[filter](query);
+
+      let matches = this[resultCount];
+      this[$resultCount].text(matches.toLocaleString() + ' result' + (matches == 1 ? '' : 's'));
+
+      let el = this[createView](results);
+      if (query === this[old]) {
+        el.activateSelected();
+      } else {
+        el.scroller.reloadData();
+        el.setState({selected: -1});
+        el.scroller.scrollTo(0);
+      }
+      el.forceUpdate();
+      this[old] = query;
+    }
+
+    // PRIVATE //
+    [filter](query) {
+      let exactMatch;
+      let hex = this[HEX_RE].exec(query);
+      if (hex !== null) {
+        let code = parseInt(hex[1], 16);
+        exactMatch = UNICODE_DATA.filter(char => char.code === code)[0];
+      }
+      if (!exactMatch && decode(query.normalize('NFC')).length === 1) {
+        let chr = query.normalize('NFC')[Symbol.iterator]().next().value;
+        exactMatch = UNICODE_DATA.filter(char => char.char === chr)[0];
+      }
+
+      this[filtered] = this.currentSorter(
+        fuzzaldrin.filter(UNICODE_DATA,
+          query, {
+            key: 'name'
+          }
+        )
+      );
+      this[exactMatch] = exactMatch;
+    }
+    [createView]() {
+      if (this[listener]) {
+        window.removeEventListener('resize', this[listener]);
+        this[listener] = null;
+      }
+      let run = () => {
+        return render(React.createElement(SearchResults, {
+          chars: this[filtered],
+          topInset: 2.5 * 16 + (!!this[exactMatch] && window.innerWidth/10),
+          exactMatch: this[exactMatch],
+        }), this[$searchResults][0]);
+      };
+      this[listener] = run;
+      window.addEventListener('resize', run);
+      return run();
+    }
+    get [resultCount]() {
+      if (this[exactMatch]) {
+        return this[filtered].length + 1;
+      }
+      return this[filtered].length;
+    }
   };
-  _listener = run;
-  window.addEventListener('resize', run);
-  return run();
 }
 
-function resultCount({filtered, exactMatch}) {
-  if (exactMatch) {
-    return filtered.length + 1;
-  }
-  return filtered.length;
-}
-
-function search(query) {
-  let results = filter(query);
-  results.filtered = currentSorter(results.filtered);
-
-  let matches = resultCount(results);
-  $('header .results').text(matches.toLocaleString() + ' result' + (matches == 1 ? '' : 's'));
-
-  let el = createView(results);
-  el.scroller.scrollTo(0);
-  if (query === old) {
-    el.activateSelected();
-  } else {
-    el.scroller.reloadData();
-    el.setState({selected: -1});
-  }
-  el.forceUpdate();
-  old = query;
-}
-
-const SORTERS = {
-  relevance: x => x,
-  codepoint: results => {
-    return [...results].sort((a, b) => a.code - b.code); // sort is in-place, so we have to make a copy.
-  },
-};
-let currentSorter = SORTERS.relevance;
+let seeker = new Seeker({
+  $results: $('.search-results'),
+  $resultCount: $('header .results'),
+});
 
 $('[name="sort"]').on('change', ({target: {value}}) => {
-  currentSorter = SORTERS[value];
-  old = '';
-  search($('.search').val().toLowerCase());
+  seeker.updateSort(value, $('.search').val().toLowerCase());
 });
 
 $('.search').on('keydown', ({which}) => {
@@ -89,8 +128,7 @@ $('.search').on('keydown', ({which}) => {
   if (query.length) {
     $('.sort').addClass('active');
 
-    search(query);
-
+    seeker.search(query);
     window.switchToSearch();
   } else {
     window.switchToMain();
@@ -98,15 +136,11 @@ $('.search').on('keydown', ({which}) => {
 });
 
 window.switchToMain = function() {
-  old = '';
   $('.search').val('');
   $('.sort').removeClass('active');
   $('header .results').text('');
-  window.removeEventListener('resize', _listener);
-  _listener = null;
 
-  unmountComponentAtNode($('.search-results')[0]);
-
+  seeker.reset();
 
   $('main').fadeIn();
   $('.search-results').fadeOut();
