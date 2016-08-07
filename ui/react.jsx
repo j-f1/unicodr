@@ -139,6 +139,11 @@ class SearchResults extends GridComponent {
       this.props.chars[this.state.selected].copy();
     }
   }
+  componentWillReceiveProps(newProps) {
+    if (!newProps.exactMatch && this.state.selected === -1) {
+      this.setState({selected: 0});
+    }
+  }
   _getCell(i) {
     // jshint ignore:start
     return <SearchResult
@@ -185,9 +190,10 @@ class SearchResults extends GridComponent {
     } else if (which === 40) { // down
       selected++;
     }
+    let min = this.props.exactMatch ? -1 : 0;
     if (which === 38 || which == 40) {
-      if (selected <= -1) {
-        selected = -1;
+      if (selected <= min) {
+        selected = min;
       }
       if (selected >= this.props.chars.length) {
         selected = this.props.chars.length - 1;
