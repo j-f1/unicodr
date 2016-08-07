@@ -61,7 +61,7 @@
     var UniChar = require('./unichar.js');
     var createScroller = require('./renderer.js');
     var loadUnicodeData = require('./loader.js');
-    var currentBrowserWindow = require('./misc.js');
+    var currentBrowserWindow = require('electron').remote.getCurrentWindow();
     var React = require('react');
     var {render} = require('react-dom');
     loadUnicodeData.then(chars => {
