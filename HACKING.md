@@ -11,6 +11,8 @@ You need:
     Next, `cd` into this directory and `npm install`.
   - [SASS](http://sass-lang.com/) for the stylesheets
 
+### What are **all these files**?
+
 - `dev/`: files related to development.
   - `load.py`: a [Python](https://python.org) file. To use, run `npm run data` in this directory.
       - I pass `-- -v` to `npm run data` to make the wait feel less long.
