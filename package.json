@@ -1,7 +1,7 @@
 {
   "name": "unicodr",
   "productName": "Unicodr",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "View & Search for Unicode characters.",
   "main": "main.js",
   "scripts": {
