@@ -51,6 +51,9 @@ mb.on('ready', () => {
       label: 'Edit',
       submenu: [
         {
+          role: 'quit'
+        },
+        {
           role: 'undo'
         },
         {
