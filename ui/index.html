@@ -91,7 +91,7 @@
         }
       }
     ]);
-    $('.hamburger').click(() => menu.popup(currentBrowserWindow, 0, 0))
+    $('.hamburger').click(() => menu.popup(currentBrowserWindow, 10, 10))
     $('iframe').each((_, {contentWindow: w}) => {
       w.require = require;
       w.process = process;
