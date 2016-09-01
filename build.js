@@ -1,15 +1,31 @@
 #!/usr/bin/env node
 
 var packager = require('electron-packager');
+var fs = require('fs');
+var path = require('path');
+
+// Promisified, based on http://stackoverflow.com/a/14387791/5244995
+
+function copy(src, dst) {
+  return new Promise(function(resolve, reject) {
+    fs.createReadStream(src)
+      .on('error', reject)
+      .pipe(fs.createWriteStream(dst)
+              .on('error', reject)
+              .on('close', resolve)
+      );
+  });
+}
 
 /**
  * USAGE:
- * node build.js # will prompt for values
- * node build.js --auto # defaults
- * node build.js --plat <plat> # no prompt
- * node build.js --arch <arch> # no prompt
- * node build.js --plat # no prompt, default
- * node build.js --arch # no prompt, default
+ * ./build.js # will prompt for values
+ * ./build.js --auto # defaults
+ * ./build.js --plat <plat> # no prompt
+ * ./build.js --arch <arch> # no prompt
+ * ./build.js --plat # no prompt, default
+ * ./build.js --arch # no prompt, default
+ * ./build.js <options?> --install # Install to /Applications
  */
 
 function prompt(arg, promptStr, defaultValue) {
@@ -23,7 +39,7 @@ function prompt(arg, promptStr, defaultValue) {
     if (!val || val.match(/^-+/)) {
       val = defaultValue;
     }
-    return Promise.resolve(val)
+    return Promise.resolve(val);
   }
 
   return new Promise(function(resolve, reject) {
@@ -60,8 +76,16 @@ prompt('--plat', 'Platform (linux/win32/darwin/all)', process.platform).then(pla
       if (err) {
         console.error('ERR!', err);
       } else {
-        paths.forEach(path => {
-          console.log('executable: ', path);
+        paths.forEach(file => {
+          var fileName = path.relative(path.join(__dirname, 'build'), file);
+          console.log('executable:', fileName);
+          if (process.argv.indexOf('--install') !== -1) {
+            copy(file, path.join('/Applications', fileName)).then(() => {
+              console.log(file, 'copied to', path.join('/Applications', fileName));
+            }, err => {
+              console.log('ERR!', err);
+            });
+          }
         });
       }
     });
