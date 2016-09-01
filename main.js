@@ -22,7 +22,7 @@ mb.on('ready', () => {
     if (mb.window.isVisible()) {
       mb.hideWindow();
     } else {
-      mb.window.webContents.executeJavaScript(`$('.search').focus().val('').trigger('keydown')`);
+      mb.window.webContents.executeJavaScript(`$('.search').focus()[0].select()`);
       mb.showWindow();
     }
   };
