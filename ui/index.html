@@ -13,6 +13,7 @@
   <body>
     <header>
       <div class="window-controls"></div>
+      <span class="hamburger">☰</span>
       <input class="sort" title="sort results" type="checkbox">
       <span class="menu">
         <strong>Sort</strong><br>
@@ -63,6 +64,7 @@
     var currentBrowserWindow = require('electron').remote.getCurrentWindow();
     var React = require('react');
     var {render} = require('react-dom');
+    var {ipcRenderer: ipc, remote: {Menu}} = require('electron');
     loadUnicodeData.then(chars => {
       // jshint ignore:start
       let run = () => {
@@ -77,5 +79,14 @@
       run();
       window.addEventListener('resize', run);
     });
+    let menu = Menu.buildFromTemplate([
+      {
+        label: 'Settings…',
+        click() {
+          ipc.send('openSettings');
+        }
+      }
+    ]);
+    $('.hamburger').click(() => menu.popup())
   </script>
 </html>

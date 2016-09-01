@@ -94,6 +94,7 @@ header {
 
     &::before {
       content: '▿';
+      cursor: pointer;
       margin-bottom: 0.5em;
     }
     &:checked::before {
@@ -144,6 +145,11 @@ header {
     opacity: 0.25;
     -webkit-user-select: none;
     pointer-events: none;
+  }
+  .hamburger {
+    margin-left: 1em;
+    cursor: pointer;
+    user-select: none;
   }
 }
 
