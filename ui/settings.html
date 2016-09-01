@@ -3,8 +3,41 @@
   <head>
     <meta charset="utf-8">
     <title>Unicodr Settings</title>
+    <link rel="stylesheet" href="vendor/min.css" charset="utf-8">
+    <link rel="stylesheet" href="index.css" charset="utf-8">
+    <script src="../node_modules/jquery/dist/jquery.js" charset="utf-8"></script>
+    <style media="screen">
+      h5 {
+        margin-bottom: -1em;
+      }
+    </style>
   </head>
-  <body>
-    <h1>Settings</h1>
+  <body style="padding-left: 8px; padding-right: 8px;">
+    <header><h3 style="width: 100%;">Settings <button style="float: right">Done</button></h3></header>
+    <section>
+      <h4>Keyboard Shortcuts</h4>
+      <h5>Open/close from any app</h5>
+      <p>
+        <label>
+          <input type="checkbox" name="ctrl">
+          <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>U</kbd>
+        </label><br>
+        <label>
+          <input type="checkbox" name="cmd">
+          <kbd>Shift</kbd>+<kbd>⌘</kbd>+<kbd>U</kbd>
+        </label>
+      </p>
+      <h5>Search results</h5>
+      <p>
+        <label><kbd>↑</kbd>: Highlight Previous</label><br>
+        <label><kbd>↓</kbd>: Highlight Next</label><br>
+        <label><kbd>&#9166; Enter</kbd>: Copy selected</label>
+      </p>
+    </section>
+    <script>
+      $('button').click(function() {
+        window.parent.$('.settings').removeClass('active');
+      });
+    </script>
   </body>
 </html>

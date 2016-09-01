@@ -1,6 +1,6 @@
 if (process.argv[2] !== '--debug') process.env.NODE_ENV = 'production';
 
-const {BrowserWindow, Menu, app, globalShortcut, ipcMain: ipc} = require('electron');
+const {Menu, app, globalShortcut} = require('electron');
 
 // const {"default": installExtension, REACT_DEVELOPER_TOOLS} = require('electron-devtools-installer');
 // console.log(installExtension);
@@ -9,19 +9,6 @@ const {BrowserWindow, Menu, app, globalShortcut, ipcMain: ipc} = require('electr
 //   .catch((err) => console.log('An error occurred: ', err));
 
 const loadUnicodeData = require('./loader.js');
-
-var settingsWindow;
-function openSettings() {
-  if (settingsWindow) {
-    settingsWindow.focus();
-  } else {
-    settingsWindow = new BrowserWindow();
-    settingsWindow.loadURL(`file://${__dirname}/ui/settings.html`);
-    settingsWindow.on('closed', () => {
-      settingsWindow = null;
-    });
-  }
-}
 
 const menubar = require('menubar');
 var mb = menubar({
@@ -33,7 +20,6 @@ var mb = menubar({
 mb.on('ready', () => {
   mb.window.setResizable(false);
   mb.window.setMaximizable(false);
-  ipc.on('openSettings', openSettings);
   let show = () => {
     if (mb.window.isVisible()) {
       mb.hideWindow();

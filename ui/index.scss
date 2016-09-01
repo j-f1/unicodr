@@ -149,7 +149,7 @@ header {
   .hamburger {
     margin-left: 1em;
     cursor: pointer;
-    user-select: none;
+    -webkit-user-select: none;
   }
 }
 
@@ -341,4 +341,59 @@ $in-place-selector: ".btn.in-place";
 #{$in-place-selector}:active span::after,
 #{$in-place-selector}:focus span::after{
   border-color: #777;
+}
+
+.settings {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  background: transparentize(black, 0.5);
+  transition: background 0.5s;
+
+  iframe {
+    border: 1px solid #ccc;
+    border-radius: .5em .5em 0 0;
+    border-bottom: none;
+    background: white;
+    display: inline-block;
+    transition: transform 0.5s, box-shadow 0.5s;
+    box-shadow: 0 0 5em transparentize(black, 0.5);
+    width: 400px;
+    height: 350px;
+  }
+
+  &:not(.active) {
+    background: transparent;
+    transition: background 0.5s 0.25s;
+    pointer-events: none;
+
+    iframe {
+      transform: translateY(100%);
+      box-shadow: none;
+    }
+  }
+}
+
+kbd {
+  font-family: inherit;
+  /* Ripped off from Stack Overflow */
+  display: inline-block;
+  margin: 0 .1em;
+  padding: .1em .6em;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #242729;
+  text-shadow: 0 1px 0 #FFF;
+  background-color: #e1e3e5;
+  border: 1px solid #adb3b9;
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(12, 13, 14, 0.2), 0 0 0 2px #FFF inset;
+  white-space: nowrap
 }
