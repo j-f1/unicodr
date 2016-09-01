@@ -79,9 +79,15 @@ header {
   padding: 0 1rem;
   box-sizing: border-box;
 
+  .hamburger {
+    cursor: pointer;
+    -webkit-user-select: none;
+  }
+
   .sort {
     &:not(.active) {
-      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
     }
     -webkit-appearance: none;
     border: none;
@@ -89,9 +95,10 @@ header {
     height: 100%;
     display: flex;
     align-items: center;
-    margin: 0 {
-      right: 1rem;
-    };
+    transition: margin 0.4s, opacity 0.4s;
+    &.active {
+      margin: 0 0.75rem;
+    }
 
     &::before {
       content: '▿';
@@ -104,7 +111,7 @@ header {
     & + .menu {
       display: none;
       position: absolute;
-      left: 0.575rem;
+      left: 2.21rem;
       top: 2rem;
       background: white;
       padding: 0.5em 1em;
@@ -146,11 +153,6 @@ header {
     opacity: 0.25;
     -webkit-user-select: none;
     pointer-events: none;
-  }
-  .hamburger {
-    margin-left: 1em;
-    cursor: pointer;
-    -webkit-user-select: none;
   }
 }
 
