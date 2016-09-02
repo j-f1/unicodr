@@ -11,6 +11,9 @@
         margin-bottom: -1em;
       }
     </style>
+    <script>
+      let settings = require('electron-settings');
+    </script>
   </head>
   <body style="padding-left: 8px; padding-right: 8px;">
     <header><h3 style="width: 100%;">Settings <button style="float: right">Done</button></h3></header>
@@ -19,11 +22,11 @@
       <h5>Open/close from any app</h5>
       <p>
         <label>
-          <input type="checkbox" name="ctrl">
+          <input type="checkbox" name="gbl.toggle.ctrl" disabled>
           <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>U</kbd>
         </label><br>
         <label>
-          <input type="checkbox" name="cmd">
+          <input type="checkbox" name="gbl.toggle.cmd" disabled>
           <kbd>Shift</kbd>+<kbd>⌘</kbd>+<kbd>U</kbd>
         </label>
       </p>
@@ -35,8 +38,26 @@
       </p>
     </section>
     <script>
-      $('button').click(function() {
+      function recursivelyApply(vals, f, _prefix) {
+        Object.keys(vals).forEach(name => {
+          let newName = (_prefix ? _prefix+'.':"") + name;
+          if (typeof vals[name] === "object") {
+            recursivelyApply(vals[name], f, newName);
+          } else {
+            f(newName, vals[name]);
+          }
+        });
+      }
+      settings.get().then(vals => {
+        recursivelyApply(vals, (key, value) => {
+          $(`[name="${key}"]`).removeAttr('disabled').prop('checked', value);
+        });
+      });
+      $('button').click(() => {
         window.parent.$('.settings').removeClass('active');
+      });
+      $('input').on('change', ({target: {name, checked}}) => {
+        settings.setSync(name, checked);
       });
     </script>
   </body>
