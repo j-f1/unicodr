@@ -75,6 +75,7 @@ prompt('--plat', 'Platform (linux/win32/darwin/all)', process.platform).then(pla
       overwrite: true,
       prune: true,
       out: 'build/',
+      'app-version': require('./package.json').version,
     }, (err, paths) => {
       if (err) {
         console.error('ERR!', err);
