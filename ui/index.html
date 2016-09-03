@@ -119,7 +119,7 @@
         enabled: false,
       },
     ]);
-    $('.hamburger').click(() => menu.popup(currentBrowserWindow, 10, 10))
+    $('.hamburger').click(() => menu.popup(currentBrowserWindow, 0, process.platform === 'darwin' ? 4 : 0))
     $('iframe').each((_, {contentWindow: w}) => {
       w.require = require;
       w.process = process;
