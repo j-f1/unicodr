@@ -26,11 +26,15 @@ function copy(src, dst) {
  * ./build.js --plat # no prompt, default
  * ./build.js --arch # no prompt, default
  * ./build.js <options?> --install # Install to /Applications
+ * ./build.js --all # All!
  */
 
 function prompt(arg, promptStr, defaultValue) {
   if (process.argv.indexOf('--auto') > -1) {
     return Promise.resolve(defaultValue);
+  }
+  if (process.argv.indexOf('--all') > -1) {
+    return Promise.resolve('all');
   }
 
   let idx = process.argv.indexOf(arg);
