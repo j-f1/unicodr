@@ -112,8 +112,12 @@
         label: 'Settings…',
         click() {
           $('.settings').toggleClass('active');
-        }
-      }
+        },
+      },
+      {
+        label: 'Version ' + require('../package.json').version + (process.env.NODE_ENV === 'production' ? '' : ' (DEV)'),
+        enabled: false,
+      },
     ]);
     $('.hamburger').click(() => menu.popup(currentBrowserWindow, 10, 10))
     $('iframe').each((_, {contentWindow: w}) => {

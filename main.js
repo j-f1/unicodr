@@ -1,4 +1,4 @@
-if (process.argv[2] !== '--debug') process.env.NODE_ENV = 'production';
+if (process.argv.indexOf('--debug') === -1) process.env.NODE_ENV = 'production';
 
 const {Menu, app, globalShortcut} = require('electron');
 

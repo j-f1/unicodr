@@ -5,7 +5,7 @@
   "description": "View & Search for Unicode characters.",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "electron . --debug",
     "data": "python3 dev/load.py",
     "watch": "sass --watch ui/index.scss:ui/index.css",
     "fast": "NODE_ENV=production npm start"
