@@ -360,7 +360,7 @@ $in-place-selector: ".btn.in-place";
   background: transparentize(black, 0.5);
   transition: background 0.5s;
 
-  iframe {
+  &>section {
     border: 1px solid #ccc;
     border-radius: 0.35em 0.35em 0 0;
     border-bottom: none;
@@ -370,6 +370,26 @@ $in-place-selector: ".btn.in-place";
     box-shadow: 0 0 5em transparentize(black, 0.5);
     width: 400px;
     height: 350px;
+    position: relative;
+    padding: 0 8px {
+      top: 2.5rem;
+    };
+
+    header {
+      &, &::after {
+        position: absolute;
+        width: 100%;
+      }
+      h3 {
+        width: 100%;
+        button {
+          float: right;
+        }
+      }
+    }
+    h5 {
+      margin-bottom: -1em;
+    }
   }
 
   &:not(.active) {
@@ -377,7 +397,7 @@ $in-place-selector: ".btn.in-place";
     transition: background 0.5s 0.25s;
     pointer-events: none;
 
-    iframe {
+    &>section {
       transform: translateY(100%);
       box-shadow: none;
     }

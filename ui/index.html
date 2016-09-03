@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="index.css" charset="utf-8">
     <script>
       window.$ = window.jQuery = require('jquery');
+      window.settings = require('electron-settings');
     </script>
     <script src="vendor/babel.js" charset="utf-8"></script>
   </head>
@@ -50,12 +51,35 @@
   </div>
 
   <div class="settings">
-    <iframe src="settings.html" width="400" height="350"></iframe>
+    <section>
+      <header><h3>Settings <button>Done</button></h3></header>
+      <section>
+        <h4>Keyboard Shortcuts</h4>
+        <h5>Open/close from any app</h5>
+        <p>
+          <label>
+            <input type="checkbox" name="gbl.toggle.ctrl" disabled>
+            <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>U</kbd>
+          </label><br>
+          <label>
+            <input type="checkbox" name="gbl.toggle.cmd" disabled>
+            <kbd>Shift</kbd>+<kbd>⌘</kbd>+<kbd>U</kbd>
+          </label>
+        </p>
+        <h5>Search results</h5>
+        <p>
+          <label><kbd>↑</kbd>: Highlight Previous</label><br>
+          <label><kbd>↓</kbd>: Highlight Next</label><br>
+          <label><kbd>&#9166; Enter</kbd>: Copy selected</label>
+        </p>
+      </section>
+    </section>
   </div>
 
   <script src="virtual.jsx" type="text/babel" charset="utf-8"></script>
   <script src="react.jsx" type="text/babel" charset="utf-8"></script>
   <script src="search.jsx" type="text/babel" charset="utf-8"></script>
+  <script src="settings.js" charset="utf-8"></script>
 
   <script type="text/babel">
     // You can also require other files to run in this process
