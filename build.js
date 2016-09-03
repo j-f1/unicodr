@@ -74,7 +74,6 @@ prompt('--plat', 'Platform (linux/win32/darwin/all)', process.platform).then(pla
       name: 'Unicodr',
       overwrite: true,
       prune: true,
-      version: '1.3.1',
       out: 'build/',
     }, (err, paths) => {
       if (err) {
