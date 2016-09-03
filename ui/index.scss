@@ -362,7 +362,9 @@ $in-place-selector: ".btn.in-place";
 
   &>section {
     border: 1px solid #ccc;
-    border-radius: 0.35em 0.35em 0 0;
+    &, header {
+      border-radius: 0.35em 0.35em 0 0;
+    }
     border-bottom: none;
     background: white;
     display: inline-block;
@@ -382,8 +384,10 @@ $in-place-selector: ".btn.in-place";
       }
       h3 {
         width: 100%;
+        display: flex;
+        align-items: center;
         button {
-          float: right;
+          margin-left: auto;
         }
       }
     }
