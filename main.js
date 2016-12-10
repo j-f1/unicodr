@@ -16,14 +16,7 @@ settings.defaults({
 });
 let observers = [];
 
-const SHORTCUTS = {
-  gbl: {
-    toggle: {
-      ctrl: 'Ctrl+Shift+U',
-      cmd: 'Cmd+Shift+U'
-    }
-  }
-};
+const {SHORTCUTS} = require('./constants');
 function initShortcuts() {
   let show = () => {
     if (mb.window.isVisible()) {

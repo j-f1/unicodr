@@ -3,7 +3,7 @@ const path = require('path');
 const fs = promisify(require('fs'));
 const CBOR = require('cbor');
 const zlib = require('zlib');
-const CACHE_PATH = require('path').join(require('electron').app.getPath('userData'), 'cache.dat');
+const {CACHE_PATH} = require('./constants');
 
 let l = v => console.log('loader: ' + v);
 if (process.env.NODE_ENV === 'production') {
