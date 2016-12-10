@@ -187,6 +187,21 @@ for code in range(0xE0000):
     if verbose and code % 100 == 0:
         printProgress(code, 0xE0000, prefix = 'Progress:', suffix = 'Complete', barLength = 50)
 
+if '--debug' in sys.argv[1:]:
+    print('\nWriting debug JSON...', end=' ')
+    if verbose:
+        indicator = Spinner()
+        indicator.start()
+
+    import json
+    with open('data.json', 'w') as f:
+        f.write(json.dumps(data))
+
+    if verbose:
+        indicator.stop()
+        indicator = None
+        print('Done.', end=' ')
+
 import zlib
 try:
     import cbor2
@@ -217,8 +232,9 @@ if verbose:
     indicator = Spinner()
     indicator.start()
 
-with open('../data.dat', 'wb') as f:
+with open('data.dat', 'wb') as f:
     f.write(compressed)
+
 
 if verbose:
     indicator.stop()
