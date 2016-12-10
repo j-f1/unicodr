@@ -167,7 +167,7 @@ def isBadCode(code):
             0x0A6A0 <= code <= 0x0A6Ff or # Bamum
             0x0D7B0 <= code <= 0x0F8Ff or # Hangul Jamo Extended-B, Surragates, Private Use, excluding ``.
             0x0FA6E <= code <= 0x0FAFf or # Some CJK Compatibility Ideographs
-            0x10000 <= code <= 0x100Ff or # Linear B Syllabary, Linear B Ideograms
+            # 0x10000 <= code <= 0x100Ff or # Linear B Syllabary, Linear B Ideograms
             0x1019C <= code <= 0x101Ff or # Ancient Symbols (REALLY????), Phaistos Disc
             0x10330 <= code <= 0x103Df or # Gothic, Ugaritic, Old Persian
             0x10480 <= code <= 0x1D0Ff or # Osmanya, Cypriot Syllabary, Imperial Aramaic, Phoenician, Lydian, Meroitic Cursive/Hiero, Kharoshthi, Old South Arabian, Avestan, Parthian, Pahlavi, Old Turkic, Rumi #’s, Brahmi, Kaithi, Sora Sompeng, Chakma, Sharada, Takri, Cuneiform, Egyptian Hiero, Bamum Sup, Miao, Kana Sup, Byzantine Music
