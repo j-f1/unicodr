@@ -18,7 +18,7 @@ $('button').click(() => {
 });
 $('.settings input').on('change', ({target: {name, checked}}) => {
   try {
-    settings.set(name, checked);//.then(() => alert(`YAY! ${name}`), err => alert(`ERR! ${err}`));
+    settings.set(name, checked);
   } catch(e) {
     alert(`FAIL ${e}`);
   }
