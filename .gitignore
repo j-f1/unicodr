@@ -4,3 +4,5 @@ index.css
 index.css.map
 .sass-cache
 build/
+data.dat
+data.json
