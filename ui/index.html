@@ -92,27 +92,29 @@
     // All of the Node.js APIs are available in this process.
 
     require('./search.js');
-    var UniChar = require('./unichar.js');
-    var loadUnicodeData = require('./loader.js');
-    var currentBrowserWindow = require('electron').remote.getCurrentWindow();
-    var React = require('react');
-    var {render} = require('react-dom');
-    var {ipcRenderer: ipc, remote: {Menu}} = require('electron');
+    const UniChar = require('./unichar.js'),
+          loadUnicodeData = require('./loader.js'),
+          currentBrowserWindow = require('electron').remote.getCurrentWindow(),
+          React = require('react'),
+          {render} = require('react-dom'),
+          {ipcRenderer: ipc, remote: {Menu}} = require('electron');
+
     loadUnicodeData.then(chars => {
       // jshint ignore:start
-      let run = () => {
-        window.mainGrid = render(<MainGrid
+      const run = () => {
+        render(<MainGrid
           cols={5}
           chars={chars}
           containerId='main'
           headerHeight={40}
+          ref={r => window.mainGrid = r}
         />, document.getElementById('main'));
-        // jshint ignore:end
       }
+      // jshint ignore:end
       run();
       window.addEventListener('resize', run);
     });
-    let menu = Menu.buildFromTemplate([
+    const menu = Menu.buildFromTemplate([
       {
         label: 'Settings…',
         click() {
