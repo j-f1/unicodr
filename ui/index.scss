@@ -360,6 +360,9 @@ $in-place-selector: ".btn.in-place";
   background: transparentize(black, 0.5);
   transition: background 0.5s;
 
+  -webkit-user-select: none;
+  cursor: default;
+
   &>section {
     border: 1px solid #ccc;
     &, header {
@@ -391,7 +394,7 @@ $in-place-selector: ".btn.in-place";
         }
       }
     }
-    h5 {
+    h4, h5 {
       margin-bottom: -1em;
     }
     section {
