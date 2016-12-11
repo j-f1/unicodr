@@ -394,6 +394,10 @@ $in-place-selector: ".btn.in-place";
     h5 {
       margin-bottom: -1em;
     }
+    section {
+      overflow-y: auto;
+      height: 100%;
+    }
   }
 
   &:not(.active) {
