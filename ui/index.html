@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="index.css" charset="utf-8">
     <script>
       window.$ = window.jQuery = require('jquery');
-      window.settings = require('electron-settings');
     </script>
     <script src="vendor/babel.js" charset="utf-8"></script>
   </head>
@@ -50,40 +49,11 @@
   <div class="search-results" style="display: none;">
   </div>
 
-  <div class="settings">
-    <section>
-      <header><h3>Settings <button class="done">Done</button></h3></header>
-      <section>
-        <h4>Keyboard Shortcuts</h4>
-        <h5>Open/close from any app</h5>
-        <p>
-          <label>
-            <input type="checkbox" name="gbl.toggle.ctrl" disabled>
-            <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>U</kbd>
-          </label><br>
-          <label>
-            <input type="checkbox" name="gbl.toggle.cmd" disabled>
-            <kbd>Shift</kbd>+<kbd>⌘</kbd>+<kbd>U</kbd>
-          </label>
-        </p>
-        <h5>Search results</h5>
-        <p>
-          <label><kbd>↑</kbd> Up Arrow: Highlight Previous</label><br>
-          <label><kbd>↓</kbd> Down Arrow: Highlight Next</label><br>
-          <label><kbd>↩</kbd> Enter: Copy selected</label>
-        </p>
-        <h4>Cache</h4>
-        <p>
-          <small>Erase cache when updating, or if the app won’t start. If you don&rsquo;t know what this is, you probably don&rsquo;t need it.</small><br>
-          <button class="cache">Erase Cache</button>
-        </p>
-      </section>
-    </section>
-  </div>
+  <div id="settings"></div>
 
   <script src="virtual.jsx" type="text/babel" charset="utf-8"></script>
   <script src="react.jsx" type="text/babel" charset="utf-8"></script>
-  <script src="settings.js" charset="utf-8"></script>
+  <script src="settings.jsx" type="text/babel" charset="utf-8"></script>
 
   <script type="text/babel">
     // You can also require other files to run in this process
@@ -99,6 +69,7 @@
           {render} = require('react-dom'),
           {ipcRenderer: ipc, remote: {Menu}} = require('electron');
 
+    render(<Settings ref={settings => window.settingsView = settings} />, document.getElementById('settings'));
     loadUnicodeData.then(chars => {
       // jshint ignore:start
       const run = () => {
@@ -118,7 +89,7 @@
       {
         label: 'Settings…',
         click() {
-          $('.settings').toggleClass('active');
+          window.settingsView.show();
         },
       },
       {
