@@ -137,6 +137,12 @@ $('.search').on('keydown', ({which}) => {
   }
 });
 
+$('body').on('keydown keyup', ({which}) => {
+  if ($('.search')[0] !== document.activeElement && $('.settings').is(':not(.active)')) {
+    $('.search').focus();
+  }
+})
+
 window.switchToMain = function() {
   $('.search').val('');
   $('.sort').removeClass('active').prop('checked', false);
