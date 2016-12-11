@@ -83,7 +83,6 @@
 
   <script src="virtual.jsx" type="text/babel" charset="utf-8"></script>
   <script src="react.jsx" type="text/babel" charset="utf-8"></script>
-  <script src="search.jsx" type="text/babel" charset="utf-8"></script>
   <script src="settings.js" charset="utf-8"></script>
 
   <script type="text/babel">
@@ -92,6 +91,7 @@
     // be executed in the renderer process for that window.
     // All of the Node.js APIs are available in this process.
 
+    require('./search.js');
     var UniChar = require('./unichar.js');
     var loadUnicodeData = require('./loader.js');
     var currentBrowserWindow = require('electron').remote.getCurrentWindow();
