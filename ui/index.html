@@ -102,5 +102,7 @@
       w.require = require;
       w.process = process;
     });
+
+    $(window).on('focus', () => $('body').removeClass('blurred')).on('blur', () => $('body').addClass('blurred'));
   </script>
 </html>

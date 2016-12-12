@@ -69,6 +69,10 @@ header {
     top: 2.5em;
   }
 
+  body.blurred & {
+    -webkit-filter: brightness(1.1);
+  }
+
   background: $header-background;
   position: fixed;
   left: 0;
@@ -242,6 +246,9 @@ header {
     &::before {
       content: '';
       width: 100vw;
+      body.blurred & {
+        -webkit-filter: brightness(1.1);
+      }
       background: $header-background;
       border-bottom: 1px solid #CCC;
       height: 10vw;
