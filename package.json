@@ -10,7 +10,8 @@
     "watch": "sass --watch ui/index.scss:ui/index.css",
     "fast": "NODE_ENV=production npm start"
   },
-  "license": "CC0-1.0",
+  "license": "UNLICESNED",
+  "private": true,
   "devDependencies": {
     "electron-devtools-installer": "^2.0.0",
     "electron-packager": "^7.5.1",
