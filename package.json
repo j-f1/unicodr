@@ -8,14 +8,16 @@
     "start": "electron . --debug",
     "data": "python3 dev/load.py -v",
     "watch": "sass --watch ui/index.scss:ui/index.css",
-    "fast": "NODE_ENV=production npm start"
+    "fast": "NODE_ENV=production npm start",
+    "build": "build-electron-app"
   },
   "license": "UNLICESNED",
   "private": true,
   "devDependencies": {
+    "build-electron-app": "file:///Users/hayfields/Documents/Jed_Folder/electron/build-electron-app",
+    "electron": "^1.4.14",
     "electron-devtools-installer": "^2.0.0",
-    "electron-packager": "^7.5.1",
-    "electron": "^1.4.14"
+    "electron-packager": "^7.5.1"
   },
   "dependencies": {
     "cbor": "^1.0.4",
